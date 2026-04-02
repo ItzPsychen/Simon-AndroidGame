@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,9 +11,103 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.example.simonsays.ui.components.SimonButtonsView
-        android:id="@+id/simonButtonsView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/buttonFlow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        app:constraint_referenced_ids="grp0,grp1,grp2,grp3,grp4,grp5"
+        app:flow_horizontalGap="16dp"
+        app:flow_maxElementsWrap="2"
+        app:flow_verticalGap="20dp"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <!-- Button Group 0 -->
+    <FrameLayout
+        android:id="@+id/grp0"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- Button Group 1 -->
+    <FrameLayout
+        android:id="@+id/grp1"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- Button Group 2 -->
+    <FrameLayout
+        android:id="@+id/grp2"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- Button Group 3 -->
+    <FrameLayout
+        android:id="@+id/grp3"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- Button Group 4 -->
+    <FrameLayout
+        android:id="@+id/grp4"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- Button Group 5 -->
+    <FrameLayout
+        android:id="@+id/grp5"
+        android:layout_width="0dp"
+        android:layout_height="120dp">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
