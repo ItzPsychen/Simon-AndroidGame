@@ -1,29 +1,36 @@
 package com.example.simonsays.ui.activities
 
-import android.os.Build
-import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
-
-import androidx.appcompat.app.AppCompatActivity
-
 import com.example.simonsays.R
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
+import com.example.simonsays.ui.components.SequenceView
 
-class MainActivity : AppCompatActivity() {
+import android.os.Bundle
+import android.graphics.Color
+
+class MainActivity : BaseActivity() {
+
+    private lateinit var sequenceView: SequenceView
+    private lateinit var gameButtons: List<ButtonView>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        hideSystemUI()
+        sequenceView = findViewById(R.id.sequenceView)
+
         setupButtons()
+        setupControlButtons()
+        setupMenuButtons()
+
+        // load saved sequence
+        val saved = gameManager.loadSavedSequence()
+        saved.forEach { sequenceView.addElement(it.first, it.second) }
     }
 
     private fun setupButtons() {
         val colors = SimonColor.entries.toTypedArray()
-        val buttons = listOf<ButtonView>(
+        gameButtons = listOf(
             findViewById(R.id.btn0),
             findViewById(R.id.btn1),
             findViewById(R.id.btn2),
@@ -32,25 +39,38 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.btn5)
         )
 
-        buttons.forEachIndexed { index, button ->
+        gameButtons.forEachIndexed { index, button ->
             if (index < colors.size) {
-                button.setConfig(colors[index].colorRes, colors[index].label)
+                val colorData = colors[index]
+                button.setConfig(colorData.colorRes, colorData.label)
+                button.setShowLabel(gameManager.isColorblindMode)
+                
+                button.setOnClickListener {
+                    sequenceView.addElement(colorData.label, colorData.colorRes)
+                }
             }
         }
     }
 
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.let { controller ->
-                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+    private fun setupControlButtons() {
+        val btnDelete = findViewById<ButtonView>(R.id.btnDeleteView)
+        val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
+
+        val controlColor = Color.BLACK
+        btnDelete.setConfig(controlColor, "DELETE", alpha = 0.2f, textSize = 50f, isBold = false)
+        btnEndGame.setConfig(controlColor, "END GAME", alpha = 0.2f, textSize = 50f, isBold = false)
+
+        btnDelete.setOnClickListener {
+            sequenceView.clear()
+            gameManager.clearSequence()
         }
+
+        btnEndGame.setOnClickListener {
+            gameManager.saveSequence(sequenceView.getSequenceData())
+        }
+    }
+
+    override fun onColorblindModeChanged(enabled: Boolean) {
+        gameButtons.forEach { it.setShowLabel(enabled) }
     }
 }

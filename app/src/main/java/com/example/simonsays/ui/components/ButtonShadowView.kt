@@ -12,9 +12,8 @@ class ButtonShadowView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        // Use a softer, more natural shadow color
         color = Color.BLACK
-        alpha = 90 // Lower alpha (approx 25%) is much smoother
+        alpha = 90
         maskFilter = BlurMaskFilter(35f, BlurMaskFilter.Blur.NORMAL)
     }
 
@@ -23,16 +22,8 @@ class ButtonShadowView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // 1. Padding: This is CRITICAL.
-        // It gives the blur space to 'fuzz out' without hitting the view edge.
         val padding = 40f
-
-        // 2. Shrink the shadow width:
-        // Making the shadow narrower than the button creates a "floating" look.
         val sideInset = 15f
-
-        // 3. Vertical Offset:
-        // Pushing the shadow down relative to the button height
         val verticalOffset = 30f
 
         rect.set(
@@ -47,7 +38,6 @@ class ButtonShadowView @JvmOverloads constructor(
     }
 
     init {
-        // Essential for BlurMaskFilter to render
         setLayerType(LAYER_TYPE_SOFTWARE, null)
     }
 }
