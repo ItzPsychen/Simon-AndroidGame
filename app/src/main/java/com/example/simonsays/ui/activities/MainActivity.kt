@@ -6,7 +6,7 @@ import com.example.simonsays.ui.components.ButtonView
 import com.example.simonsays.ui.components.SequenceView
 
 import android.os.Bundle
-import android.graphics.Color
+import android.util.TypedValue
 
 class MainActivity : BaseActivity() {
 
@@ -22,8 +22,8 @@ class MainActivity : BaseActivity() {
         setupButtons()
         setupControlButtons()
         setupMenuButtons()
-
-        // load saved sequence
+        
+        // load last saved sequence
         val saved = gameManager.loadSavedSequence()
         saved.forEach { sequenceView.addElement(it.first, it.second) }
     }
@@ -56,21 +56,41 @@ class MainActivity : BaseActivity() {
         val btnDelete = findViewById<ButtonView>(R.id.btnDeleteView)
         val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
 
-        val controlColor = Color.BLACK
-        btnDelete.setConfig(controlColor, "DELETE", alpha = 0.2f, textSize = 50f, isBold = false)
-        btnEndGame.setConfig(controlColor, "END GAME", alpha = 0.2f, textSize = 50f, isBold = false)
+        val typedValue = TypedValue()
+        theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue, true)
+        val controlColor = typedValue.data
 
+        btnDelete.setConfig(controlColor, getString(R.string.del), alpha = 0.2f, textSize = 50f, isBold = false)
+        btnEndGame.setConfig(controlColor, getString(R.string.end), alpha = 0.2f, textSize = 50f, isBold = false)
+
+        // DELETE
         btnDelete.setOnClickListener {
-            sequenceView.clear()
-            gameManager.clearSequence()
+            if (sequenceView.getSequenceData().isNotEmpty()) {
+                sequenceView.clear()
+                gameManager.clearSequence()
+            }
         }
 
+        // END GAME
         btnEndGame.setOnClickListener {
-            gameManager.saveSequence(sequenceView.getSequenceData())
+            val data = sequenceView.getSequenceData()
+            if (data.isNotEmpty()) {
+                gameManager.addSequence(data)
+                sequenceView.clear()
+                gameManager.clearSequence()
+                
+                // all buttons glow as signal
+                gameButtons.forEach { it.glow(300) }
+            }
         }
     }
 
     override fun onColorblindModeChanged(enabled: Boolean) {
         gameButtons.forEach { it.setShowLabel(enabled) }
+    }
+
+    override fun onBeforeThemeChanged() {
+        // save the state of the sequence as draft
+        gameManager.saveDraft(sequenceView.getSequenceData())
     }
 }

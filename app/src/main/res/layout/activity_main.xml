@@ -14,55 +14,18 @@
         android:layout_height="match_parent" />
 
     <!-- top menu -->
-    <LinearLayout
+    <include
         android:id="@+id/menuView"
+        layout="@layout/layout_menu"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/btnTheme"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_day"
-            android:contentDescription="Theme Toggle" />
-
-        <ImageView
-            android:id="@+id/btnColorblind"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_view"
-            android:contentDescription="Colorblind Toggle" />
-
-        <ImageView
-            android:id="@+id/btnRecords"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_agenda"
-            android:contentDescription="Records" />
-
-        <ImageView
-            android:id="@+id/btnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:contentDescription="Settings" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.simonsays.ui.components.SequenceView
         android:id="@+id/sequenceView"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"

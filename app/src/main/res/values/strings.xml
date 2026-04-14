@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Simon</string>
+    <string name="del">DELETE</string>
+    <string name="end">END GAME</string>
+    <string name="master_vol">MASTER</string>
+    <string name="music_vol">MUSIC</string>
+    <string name="vol_game">EFFECTS</string>
+    <string name="placeholder_empty">Press the buttons</string>
 </resources>

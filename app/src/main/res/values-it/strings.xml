@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Simon</string>
+    <string name="del">CANCELLA</string>
+    <string name="end">FINE PARTITA</string>
+    <string name="master_vol">MASTER</string>
+    <string name="music_vol">MUSICA</string>
+    <string name="vol_game">EFFETTI</string>
+    <string name="placeholder_empty">Premi i bottoni</string>
+</resources>

@@ -1,8 +1,12 @@
 package com.example.simonsays.ui.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.widget.ImageView
@@ -13,65 +17,154 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.simonsays.R
 import com.example.simonsays.logic.GameManager
 
+// only to force english language as default
+import java.util.Locale
+
 abstract class BaseActivity : AppCompatActivity() {
 
+    // lateinit for non-nullable and not initialized
     protected lateinit var gameManager: GameManager
 
+    // can be accessed without an instance of class
+    companion object {
+        private var lastClickTime: Long = 0
+        private const val DEBOUNCE_TIME = 300L
+        private var isChangingTheme: Boolean = false
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        // force english language
+        @Suppress("DEPRECATION")
+        val locale = Locale("en")
+        Locale.setDefault(locale)
+        val config = Configuration(newBase.resources.configuration)
+        config.setLocale(locale)
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (isChangingTheme) {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
+
         super.onCreate(savedInstanceState)
         gameManager = GameManager(this)
         
-        // saved theme
-        if (gameManager.isDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        if (AppCompatDelegate.getDefaultNightMode() != mode) {
+            AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        hideSystemUI()
+        isChangingTheme = false
+        makeImmersive()
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            makeImmersive()
+        }
+    }
+
+    private fun makeImmersive() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
+            window.setDecorFitsSystemWindows(false)
+            val controller = window.insetsController
+            controller?.let {
+                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
+        }
+    }
+
+    // menu buttons setup and listeners
     protected fun setupMenuButtons() {
+
+        // THEME
         findViewById<ImageView>(R.id.btnTheme)?.let { btn ->
             updateThemeIcon(btn)
             btn.setOnClickListener {
-                gameManager.isDarkMode = !gameManager.isDarkMode
-                if (gameManager.isDarkMode) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
-                updateThemeIcon(btn)
+                if (isSpamming() || isChangingTheme) return@setOnClickListener
+
+                isChangingTheme = true
+                onBeforeThemeChanged()
+
+                // flip animation at the end
+                btn.animate().rotationY(90f).setDuration(150).withEndAction {
+                    gameManager.isDarkMode = !gameManager.isDarkMode
+                    val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                    AppCompatDelegate.setDefaultNightMode(mode)
+                }.start()
             }
         }
 
+        // COLORBLIND
         findViewById<ImageView>(R.id.btnColorblind)?.let { btn ->
             updateColorblindIcon(btn)
             btn.setOnClickListener {
+                if (isSpamming() || isChangingTheme) return@setOnClickListener
                 gameManager.isColorblindMode = !gameManager.isColorblindMode
-                updateColorblindIcon(btn)
-                onColorblindModeChanged(gameManager.isColorblindMode)
+
+                // flip animation at the end
+                btn.animate().rotationY(90f).setDuration(150).withEndAction {
+                    updateColorblindIcon(btn)
+                    btn.rotationY = -90f
+                    btn.animate().rotationY(0f).setDuration(150).start()
+                    onColorblindModeChanged(gameManager.isColorblindMode)
+                }.start()
             }
         }
 
+        // RECORDS
         findViewById<ImageView>(R.id.btnRecords)?.setOnClickListener {
+            if (isSpamming() || isChangingTheme) return@setOnClickListener
             if (this !is RecordsActivity) {
-                startActivity(Intent(this, RecordsActivity::class.java))
-            } else if (this is RecordsActivity) {
-                startActivity(Intent(this, MainActivity::class.java))
+                val intent = Intent(this, RecordsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
             }
         }
 
+        // SETTINGS
         findViewById<ImageView>(R.id.btnSettings)?.setOnClickListener {
+            if (isSpamming() || isChangingTheme) return@setOnClickListener
             if (this !is SettingsActivity) {
-                startActivity(Intent(this, SettingsActivity::class.java))
-            } else if (this is SettingsActivity) {
-                startActivity(Intent(this, MainActivity::class.java))
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
             }
         }
+    }
+
+    // spamming check to avoid crash
+    private fun isSpamming(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime < DEBOUNCE_TIME) {
+            return true
+        }
+        lastClickTime = currentTime
+        return false
     }
 
     private fun updateThemeIcon(btn: ImageView) {
@@ -84,22 +177,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun updateColorblindIcon(btn: ImageView) {
         if (gameManager.isColorblindMode) {
-            btn.setImageResource(R.drawable.hide_icon)
+            btn.setImageResource(R.drawable.view_icon) 
         } else {
-            btn.setImageResource(R.drawable.view_icon)
+            btn.setImageResource(R.drawable.hide_icon)
         }
     }
 
-    protected open fun onColorblindModeChanged(enabled: Boolean) {
-        // TODO
-    }
-
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.let { controller ->
-                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        }
-    }
+    // like abstract, but open allow to not override the fun
+    protected open fun onColorblindModeChanged(enabled: Boolean) {}
+    protected open fun onBeforeThemeChanged() {}
 }

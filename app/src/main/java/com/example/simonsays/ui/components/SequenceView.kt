@@ -1,9 +1,16 @@
 package com.example.simonsays.ui.components
 
+import com.example.simonsays.R
+
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
+
+import androidx.core.graphics.toColorInt
 
 class SequenceView @JvmOverloads constructor(
     context: Context,
@@ -12,7 +19,7 @@ class SequenceView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val sequence = mutableListOf<Pair<String, Int>>()
-    
+
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.LEFT
         textSize = 60f
@@ -20,14 +27,23 @@ class SequenceView @JvmOverloads constructor(
     }
 
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
-        alpha = 100
+        style = Paint.Style.FILL
     }
 
-    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    // stroke for borders like the buttons
+    private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = "#333333".toColorInt()
+        strokeWidth = 8f
+    }
+
+    // placeholder that says "Press the buttons"
+    private val placeholderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
-        textSize = 60f
-        typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
+        alpha = 100
+        textSize = 50f
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.create("sans-serif-medium", Typeface.ITALIC)
     }
 
     fun addElement(label: String, color: Int) {
@@ -35,7 +51,6 @@ class SequenceView @JvmOverloads constructor(
         invalidate()
     }
 
-    // used when pressed "Cancel"
     fun clear() {
         sequence.clear()
         invalidate()
@@ -45,31 +60,50 @@ class SequenceView @JvmOverloads constructor(
         return sequence.toList()
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         
-        // background rectangle (even if empty)
-        val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
-        val cornerRadius = 40f
-        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, bgPaint)
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+        bgPaint.color = typedValue.data
+        bgPaint.alpha = 51 
 
-        if (sequence.isEmpty()) return
+        val inset = strokePaint.strokeWidth / 2f
+        val rect = RectF(inset, inset, width.toFloat() - inset, height.toFloat() - inset)
+        val cornerRadius = 40f
+
+        // draw the label for the sequence
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, bgPaint)
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, strokePaint)
 
         val centerY = height / 2f - (textPaint.descent() + textPaint.ascent()) / 2f
+        val centerX = width / 2f
+
+        // show placeholder or sequence
+        if (sequence.isEmpty()) {
+            val placeholder = context.getString(R.string.placeholder_empty)
+            canvas.drawText(placeholder, centerX, centerY, placeholderPaint)
+        } else {
+            drawSequence(canvas, centerY)
+        }
+    }
+
+    // draw the sequence and calculate the max letters visible
+    private fun drawSequence(canvas: Canvas, centerY: Float) {
         val padding = 40f
         val comma = ", "
         val ellipsis = "... "
+        val textPaintLocal = Paint(textPaint)
 
-        // some width information
         val maxWidth = width.toFloat() - padding * 2
-        val commaWidth = textPaint.measureText(comma)
-        val ellipsisWidth = dotPaint.measureText(ellipsis)
+        val commaWidth = textPaintLocal.measureText(comma)
+        val ellipsisWidth = textPaintLocal.measureText(ellipsis)
         var totalWidth = 0f
         var visibleCount = 0
 
-        // calculate max letters (before the "...")
         for (i in sequence.indices.reversed()) {
-            val itemWidth = textPaint.measureText(sequence[i].first)
+            val itemWidth = textPaintLocal.measureText(sequence[i].first)
             val needed = itemWidth + (if (i < sequence.size - 1) commaWidth else 0f)
             if (totalWidth + needed + ellipsisWidth > maxWidth && i > 0) break
             totalWidth += needed
@@ -78,20 +112,21 @@ class SequenceView @JvmOverloads constructor(
 
         var currentX = padding
         if (visibleCount < sequence.size) {
-            canvas.drawText(ellipsis, currentX, centerY, dotPaint)
+            textPaintLocal.color = Color.WHITE
+            canvas.drawText(ellipsis, currentX, centerY, textPaintLocal)
             currentX += ellipsisWidth
         }
 
         val startIndex = sequence.size - visibleCount
         for (i in startIndex until sequence.size) {
             val item = sequence[i]
-            textPaint.color = item.second
-            canvas.drawText(item.first, currentX, centerY, textPaint)
-            currentX += textPaint.measureText(item.first)
+            textPaintLocal.color = item.second
+            canvas.drawText(item.first, currentX, centerY, textPaintLocal)
+            currentX += textPaintLocal.measureText(item.first)
             
             if (i < sequence.size - 1) {
-                textPaint.color = Color.WHITE
-                canvas.drawText(comma, currentX, centerY, textPaint)
+                textPaintLocal.color = Color.WHITE
+                canvas.drawText(comma, currentX, centerY, textPaintLocal)
                 currentX += commaWidth
             }
         }

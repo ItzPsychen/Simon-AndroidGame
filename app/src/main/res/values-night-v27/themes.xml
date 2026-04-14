@@ -1,21 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Base.Theme.SimonSays" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- dark mode -->
+    <style name="Theme.SimonSays" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/ocean_dark</item>
         <item name="colorSecondary">@color/gray_dark</item>
         <item name="colorSurface">@color/gray_dark</item>
-
-        <!-- immersive theme -->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-
         <item name="android:windowBackground">@color/ocean_dark</item>
     </style>
-
-    <style name="Theme.SimonSays" parent="Base.Theme.SimonSays" />
 </resources>
