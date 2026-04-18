@@ -1,8 +1,6 @@
 <resources>
     <style name="Base.Theme.SimonSays" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#050510</item>
-        <item name="colorSecondary">#000000</item>
-        <item name="colorSurface">#000000</item>
 
         <!-- immersive theme -->
         <item name="android:windowFullscreen">true</item>

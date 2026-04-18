@@ -1,6 +1,7 @@
 package com.example.simonsays.ui.components
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.media.AudioManager
@@ -45,6 +46,7 @@ class ButtonView @JvmOverloads constructor(
         strokeWidth = 8f
     }
 
+    // values for text in the buttons
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         textAlign = Paint.Align.CENTER
@@ -66,15 +68,17 @@ class ButtonView @JvmOverloads constructor(
                 toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
             }
             toneGenerator?.startTone(ToneGenerator.TONE_SUP_PIP, 50)
-        } catch (e: Exception) { }
+        } catch (_: Exception) { }
     }
 
+    // called when the view is removed
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         toneGenerator?.release()
         toneGenerator = null
     }
 
+    // configures the buttons with colors and labels
     fun setConfig(color: Int, label: String, alpha: Float? = null, textSize: Float = 100f, isBold: Boolean = true) {
         if (color in 1..0x01000000) {
             this.buttonColorRes = color
@@ -95,6 +99,7 @@ class ButtonView @JvmOverloads constructor(
         invalidate()
     }
 
+    // shows or hides the label (depending on mode)
     fun setShowLabel(show: Boolean) {
         this.showLabel = show
         invalidate()
@@ -113,6 +118,8 @@ class ButtonView @JvmOverloads constructor(
         }
     }
 
+    // listener called whenever a button is touched
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -133,6 +140,7 @@ class ButtonView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
+    // draws the buttons (with everything else)
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

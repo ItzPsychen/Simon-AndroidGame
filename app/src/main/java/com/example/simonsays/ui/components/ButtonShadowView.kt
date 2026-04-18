@@ -11,6 +11,7 @@ class ButtonShadowView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    // shadow object with values
     private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         alpha = 90
@@ -19,6 +20,7 @@ class ButtonShadowView @JvmOverloads constructor(
 
     private val rect = RectF()
 
+    // draws the shadows in the buttons
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

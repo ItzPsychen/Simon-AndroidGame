@@ -30,6 +30,8 @@ class BgView @JvmOverloads constructor(
     private val hsv = floatArrayOf(0f, 0.7f, 0.5f)
     private var shader: RadialGradient? = null
 
+    // draws the background (animated)
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

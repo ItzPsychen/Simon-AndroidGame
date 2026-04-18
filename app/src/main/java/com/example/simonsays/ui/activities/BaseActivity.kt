@@ -3,7 +3,6 @@ package com.example.simonsays.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -32,9 +31,10 @@ abstract class BaseActivity : AppCompatActivity() {
         private var isChangingTheme: Boolean = false
     }
 
+    // called before the onCreate (before the creation of the UI)
     override fun attachBaseContext(newBase: Context) {
-        // force english language
         @Suppress("DEPRECATION")
+        // force english language
         val locale = Locale("en")
         Locale.setDefault(locale)
         val config = Configuration(newBase.resources.configuration)
@@ -42,6 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.attachBaseContext(newBase.createConfigurationContext(config))
     }
 
+    // start of the Activity (start of UI and GameManager)
     override fun onCreate(savedInstanceState: Bundle?) {
         if (isChangingTheme) {
             @Suppress("DEPRECATION")
@@ -57,12 +58,14 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // called whenever the Activity becomes visible
     override fun onResume() {
         super.onResume()
         isChangingTheme = false
         makeImmersive()
     }
 
+    // listener of whenever the Activity loses focus
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -70,6 +73,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // to make the Activity immersive (fullscreen, no status bar, no navigation bar)
     private fun makeImmersive() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             @Suppress("DEPRECATION")
@@ -167,6 +171,7 @@ abstract class BaseActivity : AppCompatActivity() {
         return false
     }
 
+    // changes the theme icon when tapped
     private fun updateThemeIcon(btn: ImageView) {
         if (gameManager.isDarkMode) {
             btn.setImageResource(R.drawable.darkmood_icon)
@@ -175,6 +180,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // changes the colorblind icon when tapped
     private fun updateColorblindIcon(btn: ImageView) {
         if (gameManager.isColorblindMode) {
             btn.setImageResource(R.drawable.view_icon) 

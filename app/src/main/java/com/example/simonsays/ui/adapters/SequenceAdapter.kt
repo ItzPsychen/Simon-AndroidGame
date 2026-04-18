@@ -30,5 +30,6 @@ class SequenceAdapter(private val sequences: List<List<Pair<String, Int>>>) :
         holder.tvSequence.text = sequence.joinToString(", ") { it.first }
     }
 
+    // returns the number of sequences saved
     override fun getItemCount() = sequences.size
 }

@@ -2,7 +2,6 @@
 <resources>
     <style name="Theme.SimonSays" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/ocean_dark</item>
-        <item name="colorSecondary">@color/gray_dark</item>
         <item name="colorSurface">@color/gray_dark</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>

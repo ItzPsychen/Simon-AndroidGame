@@ -1,20 +1,25 @@
 package com.example.simonsays.ui.activities
 
+import android.os.Bundle
+import android.util.TypedValue
 import com.example.simonsays.R
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
 import com.example.simonsays.ui.components.SequenceView
-
-import android.os.Bundle
-import android.util.TypedValue
 
 class MainActivity : BaseActivity() {
 
     private lateinit var sequenceView: SequenceView
     private lateinit var gameButtons: List<ButtonView>
 
+    // start of the Activity (start of UI)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null && !intent.hasExtra("is_restarting")) {
+            gameManager.clearSequence()
+        }
+        
         setContentView(R.layout.activity_main)
 
         sequenceView = findViewById(R.id.sequenceView)
@@ -28,6 +33,7 @@ class MainActivity : BaseActivity() {
         saved.forEach { sequenceView.addElement(it.first, it.second) }
     }
 
+    // setup of all buttons (colored)
     private fun setupButtons() {
         val colors = SimonColor.entries.toTypedArray()
         gameButtons = listOf(
@@ -52,6 +58,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // setup for delete and end game buttons
     private fun setupControlButtons() {
         val btnDelete = findViewById<ButtonView>(R.id.btnDeleteView)
         val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
@@ -85,12 +92,19 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // instance and sequence draft saver
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        gameManager.saveDraft(sequenceView.getSequenceData())
+    }
+
+    // helper function for colorblind mode changes
     override fun onColorblindModeChanged(enabled: Boolean) {
         gameButtons.forEach { it.setShowLabel(enabled) }
     }
 
+    // sequence saver when theme is changed
     override fun onBeforeThemeChanged() {
-        // save the state of the sequence as draft
         gameManager.saveDraft(sequenceView.getSequenceData())
     }
 }

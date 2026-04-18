@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    tools:context=".ui.activities.MainActivity">
+
+    <com.example.simonsays.ui.components.BgView
+        android:id="@+id/bgView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- top menu -->
+    <include
+        android:id="@+id/menuView"
+        layout="@layout/layout_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/buttonFlow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:constraint_referenced_ids="grp0,grp1,grp2,grp3,grp4,grp5"
+        app:flow_horizontalGap="16dp"
+        app:flow_maxElementsWrap="2"
+        app:flow_verticalGap="16dp"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightSideGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menuView"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightSideGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.example.simonsays.ui.components.SequenceView
+        android:id="@+id/sequenceView"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rightSideGuideline"
+        app:layout_constraintTop_toTopOf="@id/buttonFlow" />
+
+    <LinearLayout
+        android:id="@+id/controlButtonsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="@id/buttonFlow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rightSideGuideline">
+
+        <!-- delete button -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <com.example.simonsays.ui.components.ButtonView
+                android:id="@+id/btnDeleteView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <!-- end game button -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <com.example.simonsays.ui.components.ButtonView
+                android:id="@+id/btnEndGameView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- button group 0 -->
+    <FrameLayout
+        android:id="@+id/grp0"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- button group 1 -->
+    <FrameLayout
+        android:id="@+id/grp1"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- button group 2 -->
+    <FrameLayout
+        android:id="@+id/grp2"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- button group 3 -->
+    <FrameLayout
+        android:id="@+id/grp3"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- button group 4 -->
+    <FrameLayout
+        android:id="@+id/grp4"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- button group 5 -->
+    <FrameLayout
+        android:id="@+id/grp5"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.simonsays.ui.components.ButtonShadowView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.example.simonsays.ui.components.ButtonView
+            android:id="@+id/btn5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.example.simonsays.ui.components
 
 import com.example.simonsays.R
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
@@ -20,6 +19,7 @@ class SequenceView @JvmOverloads constructor(
 
     private val sequence = mutableListOf<Pair<String, Int>>()
 
+    // text for the sequence
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.LEFT
         textSize = 60f
@@ -46,20 +46,24 @@ class SequenceView @JvmOverloads constructor(
         typeface = Typeface.create("sans-serif-medium", Typeface.ITALIC)
     }
 
+    // add element to the sequence
     fun addElement(label: String, color: Int) {
         sequence.add(label to color)
         invalidate()
     }
 
+    // delete all elements from the sequence
     fun clear() {
         sequence.clear()
         invalidate()
     }
 
+    // return the sequence data
     fun getSequenceData(): List<Pair<String, Int>> {
         return sequence.toList()
     }
 
+    // draws the sequence with the background
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -89,7 +93,7 @@ class SequenceView @JvmOverloads constructor(
         }
     }
 
-    // draw the sequence and calculate the max letters visible
+    // calculate the max letters visible and draw the sequence
     private fun drawSequence(canvas: Canvas, centerY: Float) {
         val padding = 40f
         val comma = ", "
