@@ -35,7 +35,7 @@ abstract class BaseActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun attachBaseContext(newBase: Context) {
         // getting info from SharedPreferences
-        val sharedPref = newBase.getSharedPreferences("SimonSaysPrefs", Context.MODE_PRIVATE)
+        val sharedPref = newBase.getSharedPreferences("SimonSaysPrefs", MODE_PRIVATE)
         val isEnglish = sharedPref.getBoolean("is_english", true)
         
         val locale = if (isEnglish) Locale("en") else Locale("it")
@@ -194,9 +194,9 @@ abstract class BaseActivity : AppCompatActivity() {
     // changes the theme icon when tapped
     private fun updateThemeIcon(btn: ImageView) {
         if (gameManager.isDarkMode) {
-            btn.setImageResource(R.drawable.darkmood_icon)
+            btn.setImageResource(R.drawable.darkmode_icon)
         } else {
-            btn.setImageResource(R.drawable.lightmood_icon)
+            btn.setImageResource(R.drawable.lightmode_icon)
         }
     }
 

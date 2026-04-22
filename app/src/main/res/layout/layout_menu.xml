@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menuContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="32dp"
     android:paddingBottom="10dp"
     android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="center"
+    tools:ignore="HardcodedText">
 
     <!-- THEME -->
     <ImageView
@@ -14,7 +16,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_weight="1"
-        android:src="@drawable/lightmood_icon"
+        android:src="@drawable/lightmode_icon"
         android:contentDescription="theme" />
 
     <!-- LANGUAGE -->
