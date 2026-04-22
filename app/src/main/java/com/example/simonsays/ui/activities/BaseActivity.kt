@@ -32,14 +32,20 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     // called before the onCreate (before the creation of the UI)
+    @Suppress("DEPRECATION")
     override fun attachBaseContext(newBase: Context) {
-        @Suppress("DEPRECATION")
-        // force english language
-        val locale = Locale("en")
+        // getting info from SharedPreferences
+        val sharedPref = newBase.getSharedPreferences("SimonSaysPrefs", Context.MODE_PRIVATE)
+        val isEnglish = sharedPref.getBoolean("is_english", true)
+        
+        val locale = if (isEnglish) Locale("en") else Locale("it")
         Locale.setDefault(locale)
+        
         val config = Configuration(newBase.resources.configuration)
         config.setLocale(locale)
-        super.attachBaseContext(newBase.createConfigurationContext(config))
+        
+        val context = newBase.createConfigurationContext(config)
+        super.attachBaseContext(context)
     }
 
     // start of the Activity (start of UI and GameManager)
@@ -111,6 +117,20 @@ abstract class BaseActivity : AppCompatActivity() {
                     gameManager.isDarkMode = !gameManager.isDarkMode
                     val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
                     AppCompatDelegate.setDefaultNightMode(mode)
+                }.start()
+            }
+        }
+
+        // LANGUAGE
+        findViewById<ImageView>(R.id.btnLanguage)?.let { btn ->
+            btn.setOnClickListener {
+                if (isSpamming() || isChangingTheme) return@setOnClickListener
+
+                // flip animation at the end
+                btn.animate().rotationY(90f).setDuration(150).withEndAction {
+                    btn.rotationY = -90f
+                    btn.animate().rotationY(0f).setDuration(150).start()
+                    onLanguageChanged()
                 }.start()
             }
         }
@@ -190,6 +210,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     // like abstract, but open allow to not override the fun
+    protected open fun onLanguageChanged() {}
     protected open fun onColorblindModeChanged(enabled: Boolean) {}
     protected open fun onBeforeThemeChanged() {}
 }

@@ -68,10 +68,17 @@ class GameManager(context: Context) {
         sharedPref.edit { remove("history_list") }
     }
 
+    // getter for language
+    var isEnglishLanguage: Boolean
+        get() = sharedPref.getBoolean("is_english", true)
+        set(value) = sharedPref.edit { putBoolean("is_english", value) }
+
+    // getter for colorblind mode
     var isColorblindMode: Boolean
         get() = sharedPref.getBoolean("colorblind_mode", true)
         set(value) = sharedPref.edit { putBoolean("colorblind_mode", value) }
 
+    // getter for theme mode
     var isDarkMode: Boolean
         get() = sharedPref.getBoolean("is_dark_mode", false)
         set(value) = sharedPref.edit { putBoolean("is_dark_mode", value) }

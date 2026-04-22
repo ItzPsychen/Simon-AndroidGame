@@ -85,7 +85,7 @@ class MainActivity : BaseActivity() {
                 gameManager.addSequence(data)
                 sequenceView.clear()
                 gameManager.clearSequence()
-                
+
                 // all buttons glow as signal
                 gameButtons.forEach { it.glow(300) }
             }
@@ -96,6 +96,14 @@ class MainActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         gameManager.saveDraft(sequenceView.getSequenceData())
+    }
+
+    // helper function for language changes
+    @Suppress("DEPRECATION")
+    override fun onLanguageChanged() {
+        gameManager.isEnglishLanguage = !gameManager.isEnglishLanguage
+        gameManager.saveDraft(sequenceView.getSequenceData())
+        recreate()
     }
 
     // helper function for colorblind mode changes
