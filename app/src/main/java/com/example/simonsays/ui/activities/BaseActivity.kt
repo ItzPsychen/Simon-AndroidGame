@@ -23,18 +23,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // lateinit for non-nullable and not initialized
     protected lateinit var gameManager: GameManager
+    
+    // trackers to detect changes
+    private var lastLanguage: Boolean = true
+    private var lastColorblindMode: Boolean = true
 
     // can be accessed without an instance of class
     companion object {
         private var lastClickTime: Long = 0
         private const val DEBOUNCE_TIME = 300L
-        private var isChangingTheme: Boolean = false
+        private var isChangingConfig: Boolean = false
     }
 
     // called before the onCreate (before the creation of the UI)
     @Suppress("DEPRECATION")
     override fun attachBaseContext(newBase: Context) {
-        // getting info from SharedPreferences
         val sharedPref = newBase.getSharedPreferences("SimonSaysPrefs", MODE_PRIVATE)
         val isEnglish = sharedPref.getBoolean("is_english", true)
         
@@ -50,25 +53,41 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // start of the Activity (start of UI and GameManager)
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (isChangingTheme) {
+        gameManager = GameManager(this)
+        
+        // save state for this activity
+        lastLanguage = gameManager.isEnglishLanguage
+        lastColorblindMode = gameManager.isColorblindMode
+
+        if (isChangingConfig) {
             @Suppress("DEPRECATION")
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
-        super.onCreate(savedInstanceState)
-        gameManager = GameManager(this)
-        
         val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         if (AppCompatDelegate.getDefaultNightMode() != mode) {
             AppCompatDelegate.setDefaultNightMode(mode)
         }
+        
+        super.onCreate(savedInstanceState)
     }
 
     // called whenever the Activity becomes visible
     override fun onResume() {
         super.onResume()
-        isChangingTheme = false
+        
+        // recreate if state changed on another activity
+        if (lastLanguage != gameManager.isEnglishLanguage || lastColorblindMode != gameManager.isColorblindMode) {
+            isChangingConfig = true
+            recreate()
+            return
+        }
+
+        isChangingConfig = false
         makeImmersive()
+        
+        // refresh icons
+        updateMenuIcons()
     }
 
     // listener of whenever the Activity loses focus
@@ -107,10 +126,10 @@ abstract class BaseActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.btnTheme)?.let { btn ->
             updateThemeIcon(btn)
             btn.setOnClickListener {
-                if (isSpamming() || isChangingTheme) return@setOnClickListener
+                if (isSpamming() || isChangingConfig) return@setOnClickListener
 
-                isChangingTheme = true
-                onBeforeThemeChanged()
+                isChangingConfig = true
+                onBeforeConfigChanged()
 
                 // flip animation at the end
                 btn.animate().rotationY(90f).setDuration(150).withEndAction {
@@ -124,12 +143,14 @@ abstract class BaseActivity : AppCompatActivity() {
         // LANGUAGE
         findViewById<ImageView>(R.id.btnLanguage)?.let { btn ->
             btn.setOnClickListener {
-                if (isSpamming() || isChangingTheme) return@setOnClickListener
+                if (isSpamming() || isChangingConfig) return@setOnClickListener
+                
+                isChangingConfig = true
+                onBeforeConfigChanged()
 
                 // flip animation at the end
                 btn.animate().rotationY(90f).setDuration(150).withEndAction {
-                    btn.rotationY = -90f
-                    btn.animate().rotationY(0f).setDuration(150).start()
+                    gameManager.isEnglishLanguage = !gameManager.isEnglishLanguage
                     onLanguageChanged()
                 }.start()
             }
@@ -139,36 +160,41 @@ abstract class BaseActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.btnColorblind)?.let { btn ->
             updateColorblindIcon(btn)
             btn.setOnClickListener {
-                if (isSpamming() || isChangingTheme) return@setOnClickListener
-                gameManager.isColorblindMode = !gameManager.isColorblindMode
+                if (isSpamming() || isChangingConfig) return@setOnClickListener
+                
+                isChangingConfig = true
+                onBeforeConfigChanged()
 
                 // flip animation at the end
                 btn.animate().rotationY(90f).setDuration(150).withEndAction {
-                    updateColorblindIcon(btn)
-                    btn.rotationY = -90f
-                    btn.animate().rotationY(0f).setDuration(150).start()
+                    gameManager.isColorblindMode = !gameManager.isColorblindMode
                     onColorblindModeChanged(gameManager.isColorblindMode)
                 }.start()
             }
         }
 
         // RECORDS
-        findViewById<ImageView>(R.id.btnRecords)?.setOnClickListener {
-            if (isSpamming() || isChangingTheme) return@setOnClickListener
-            if (this !is RecordsActivity) {
-                val intent = Intent(this, RecordsActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                startActivity(intent)
-            } else {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                startActivity(intent)
+        findViewById<ImageView>(R.id.btnRecords)?.let { btn ->
+            // to ensure the icons are correct
+            updateMenuIcons()
+
+            btn.setOnClickListener {
+                if (isSpamming() || isChangingConfig) return@setOnClickListener
+                if (this !is RecordsActivity) {
+                    val intent = Intent(this, RecordsActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
+                }
             }
         }
 
         // SETTINGS
         findViewById<ImageView>(R.id.btnSettings)?.setOnClickListener {
-            if (isSpamming() || isChangingTheme) return@setOnClickListener
+            if (isSpamming() || isChangingConfig) return@setOnClickListener
             if (this !is SettingsActivity) {
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -200,7 +226,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    // changes the colorblind icon when tapped
     private fun updateColorblindIcon(btn: ImageView) {
         if (gameManager.isColorblindMode) {
             btn.setImageResource(R.drawable.view_icon) 
@@ -209,8 +234,14 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // update each menu icon
+    private fun updateMenuIcons() {
+        findViewById<ImageView>(R.id.btnTheme)?.let { updateThemeIcon(it) }
+        findViewById<ImageView>(R.id.btnColorblind)?.let { updateColorblindIcon(it) }
+    }
+
     // like abstract, but open allow to not override the fun
-    protected open fun onLanguageChanged() {}
-    protected open fun onColorblindModeChanged(enabled: Boolean) {}
-    protected open fun onBeforeThemeChanged() {}
+    protected open fun onLanguageChanged() { recreate() }
+    protected open fun onColorblindModeChanged(enabled: Boolean) { recreate() }
+    protected open fun onBeforeConfigChanged() {}
 }

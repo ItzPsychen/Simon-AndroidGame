@@ -2,6 +2,7 @@ package com.example.simonsays.ui.activities
 
 import android.os.Bundle
 import android.util.TypedValue
+
 import com.example.simonsays.R
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
@@ -99,20 +100,19 @@ class MainActivity : BaseActivity() {
     }
 
     // helper function for language changes
-    @Suppress("DEPRECATION")
     override fun onLanguageChanged() {
-        gameManager.isEnglishLanguage = !gameManager.isEnglishLanguage
         gameManager.saveDraft(sequenceView.getSequenceData())
-        recreate()
+        super.onLanguageChanged()
     }
 
     // helper function for colorblind mode changes
     override fun onColorblindModeChanged(enabled: Boolean) {
-        gameButtons.forEach { it.setShowLabel(enabled) }
+        gameManager.saveDraft(sequenceView.getSequenceData())
+        super.onColorblindModeChanged(enabled)
     }
 
-    // sequence saver when theme is changed
-    override fun onBeforeThemeChanged() {
+    // helper function for configuration changes
+    override fun onBeforeConfigChanged() {
         gameManager.saveDraft(sequenceView.getSequenceData())
     }
 }
