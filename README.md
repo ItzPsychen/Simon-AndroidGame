@@ -1,36 +1,31 @@
 # Simon - Android Game
 
-Variante del gioco **Simon**, sviluppato come applicazione usando Android Studio.
+A variant of the **Simon** game, developed as a native Android application for the "Embedded Systems Programming" course (2025-26).
 
-## Requisiti della Consegna
+---   
 
-### 1. Schermata 1: Input Sequenza
-* [x] **Matrice Colori (3x2)**: Griglia fissa con i colori Rosso (R), Verde (G), Blu (B), Magenta (M), Giallo (Y) e Ciano (C).
-* [x] **Display Dinamico**: Area di testo colorato che mostra la sequenza premuta usando le iniziali inglesi (`R, G, B, M, Y, C`)
-* [x] **Logica Pulsanti**:
-    * **Cancella**: Azzera la sequenza corrente e pulisce l'area di testo.
-    * **Fine Partita**: Termina la sequenza memorizzandola ed eliminandola.
+## 🛠 Requirements
 
-### 2. Schermata 2: Storico Partite
-* [x] **Lista Dinamica**: Mostra l'elenco di tutte le sequenze create fino a quel momento.
-* [x] **Dettagli Elemento**:
-    * A sinistra: Numero di rettangoli premuti.
-    * A destra: La sequenza completa (trocata con `...` se necessario).
-* [x] **Troncamento Grafico**: Le sequenze troppo lunghe vengono troncate automaticamente con un indicatore visivo.
-* [x] **Navigazione**: Il tasto "Back" di sistema (o lo stesso tasto usato) riporta alla Schermata 1 per iniziare una nuova sequenza.
+### 1. Main Game Screen
+* [x] **Color Matrix (3x2)**: Fixed grid with Red (`R`), Green (`G`), Blue (`B`), Magenta (`M`), Yellow (`Y`) and Cyan (`C`).
+* [x] **Dynamic Display**: Text area showing the pressed sequence using English initials (also colored).
+* [ ] **Button Logic**: `Start Game` (starts the game), `Pause` (pauses the game) and `End Game` (terminates and stores).
+* [ ] **Show Game Sequence**: The game once started, round by round, shows a sequence that the player has to replicate (after each the sequence gets longer by `1`).
+* [ ] **Button Sounds**: During the game, colored buttons make different sounds (useful to better memorize the sequence).
 
-### 3. Layout Adattivo (Responsività)
-L'app cambia struttura in base all'orientamento del dispositivo:
-* [x] **Portrait (Verticale)**: Dall'alto l'Area di Testo, la Matrice 3x2 di pulsanti e i Pulsanti.
-* [x] **Landscape (Orizzontale)**: Da sinistra la Matrice rimane 3x2, seguita dall'Area Testo e i Pulsanti sulla destra.
+### 2. Games History Screen
+* [ ] **Dynamic List**: Displays all created games, with the final error highlighted.
+* [ ] ${\color{green}[extra]}$ **Top 3 Scores**: On top are displayed the best scores.
+* [x] **Item Details**: Number of presses on the left, full sequence (truncated with `...`) on the right.
+* [x] **Navigation**: System "Back" button returns to the main screen.
 
-### 4. Localizzazione
-Supporto multilingua che prevede la possibilità di essere cambiato a piacimento tra:
-* [x] IT **Italiano**
-* [x] EN **Inglese**
+### 3. Settings Screen
+* [x] ${\color{green}[extra]}$ **Sound Effects**: Slider that allows the user to set the volume.
+* [x] ${\color{green}[extra]}$ **Functionalities**: `Colorblind Mode` enables the letters on each colored button, `Language` changes the language (`IT/EN`) and `Theme` allows to select light or dark mode.
+* [x] ${\color{green}[extra]}$ **Action Buttons**: `Reset to Default` brings back the default settings and `Delete All` that clears all the game history (a confirmation pop-up would appear).
 
-### 5. Gestione dello Stato (Instance State)
-L'applicazione gestisce correttamente la rotazione dello schermo:
-* La sequenza in corso nella Schermata 1 viene preservata durante il cambio di orientamento.
-* La lista delle partite nella Schermata 2 rimane disponibile finché l'app non viene terminata.
-* *Nota: i dati non si azzerano alla chiusura definitiva dell'app.*
+### 4. Layout and Localization
+* [x] **Adaptive Layout**: Different structures for Portrait and Landscape modes.
+* [x] **Localization**: Support for Italian (`IT`) and English (`EN`).
+* [x] **Instance State**: Current sequence is preserved during screen rotation and other actions.
+* [ ] **Game Data**: All data about the game history is saved using SqliteDatabase
