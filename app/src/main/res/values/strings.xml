@@ -6,4 +6,19 @@
     <string name="music_vol">MUSIC</string>
     <string name="vol_game">EFFECTS</string>
     <string name="placeholder_empty">Press the buttons</string>
+
+    <!-- SETTINGS -->
+    <string name="sound_effects">Sound Effects</string>
+    <string name="colorblind_label">Colorblind Mode</string>
+    <string name="language_label">Language</string>
+    <string name="theme_label">Theme</string>
+    <string name="light_mode">Light</string>
+    <string name="dark_mode">Dark</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="reset_default">RESET TO DEFAULT</string>
+    <string name="delete_records">DELETE ALL RECORDS</string>
+    <string name="confirm_delete">Are you sure you want to delete all records?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

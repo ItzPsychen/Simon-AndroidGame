@@ -2,7 +2,6 @@ package com.example.simonsays.logic
 
 import android.content.Context
 import android.content.SharedPreferences
-
 import androidx.core.content.edit
 
 class GameManager(context: Context) {
@@ -33,17 +32,20 @@ class GameManager(context: Context) {
         sharedPref.edit { putString("saved_sequence", serialized) }
     }
 
+    // helper function to return all sequences (after deserialization)
     fun getAllSequences(): List<List<Pair<String, Int>>> {
         val historyStr = sharedPref.getString("history_list", "") ?: return emptyList()
         if (historyStr.isEmpty()) return emptyList()
         return historyStr.split("|").map { deserialize(it) }
     }
 
+    // function that loads the saved sequence (draft)
     fun loadSavedSequence(): List<Pair<String, Int>> {
         val saved = sharedPref.getString("saved_sequence", null) ?: return emptyList()
         return deserialize(saved)
     }
 
+    // helper function to separate each sequence
     private fun deserialize(serialized: String): List<Pair<String, Int>> {
         if (serialized.isEmpty()) return emptyList()
         return serialized.split(",").mapNotNull { item ->
@@ -58,14 +60,25 @@ class GameManager(context: Context) {
         }
     }
 
+    // clear the saved sequence
     fun clearSequence() {
         sharedPref.edit { remove("saved_sequence") }
     }
 
-    // TODO
-    // will be used in settings
+    // delete all games
     fun clearHistory() {
         sharedPref.edit { remove("history_list") }
+    }
+
+    // reset settings to default one
+    fun resetToDefault() {
+        sharedPref.edit {
+            putBoolean("is_english", true)
+            putBoolean("colorblind_mode", true)
+            putBoolean("is_dark_mode", false)
+            putBoolean("sound_enabled", true)
+            putInt("sound_volume", 70)
+        }
     }
 
     // getter for language
@@ -82,4 +95,9 @@ class GameManager(context: Context) {
     var isDarkMode: Boolean
         get() = sharedPref.getBoolean("is_dark_mode", false)
         set(value) = sharedPref.edit { putBoolean("is_dark_mode", value) }
+
+    // getter and setter for sound effects volume
+    var soundVolume: Int
+        get() = sharedPref.getInt("sound_volume", 70)
+        set(value) = sharedPref.edit { putInt("sound_volume", value) }
 }

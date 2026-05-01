@@ -140,22 +140,6 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         }
 
-        // LANGUAGE
-        findViewById<ImageView>(R.id.btnLanguage)?.let { btn ->
-            btn.setOnClickListener {
-                if (isSpamming() || isChangingConfig) return@setOnClickListener
-                
-                isChangingConfig = true
-                onBeforeConfigChanged()
-
-                // flip animation at the end
-                btn.animate().rotationY(90f).setDuration(150).withEndAction {
-                    gameManager.isEnglishLanguage = !gameManager.isEnglishLanguage
-                    onLanguageChanged()
-                }.start()
-            }
-        }
-
         // COLORBLIND
         findViewById<ImageView>(R.id.btnColorblind)?.let { btn ->
             updateColorblindIcon(btn)
@@ -226,6 +210,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // changes the colorblind icon when tapped
     private fun updateColorblindIcon(btn: ImageView) {
         if (gameManager.isColorblindMode) {
             btn.setImageResource(R.drawable.view_icon) 

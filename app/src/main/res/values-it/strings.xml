@@ -6,4 +6,19 @@
     <string name="music_vol">MUSICA</string>
     <string name="vol_game">EFFETTI</string>
     <string name="placeholder_empty">Premi i bottoni</string>
+
+    <!-- SETTINGS -->
+    <string name="sound_effects">Effetti Sonori</string>
+    <string name="colorblind_label">Daltonismo</string>
+    <string name="language_label">Lingua</string>
+    <string name="theme_label">Tema</string>
+    <string name="light_mode">Chiaro</string>
+    <string name="dark_mode">Scuro</string>
+    <string name="on">SI</string>
+    <string name="off">NO</string>
+    <string name="reset_default">RIPRISTINA</string>
+    <string name="delete_records">ELIMINA TUTTO</string>
+    <string name="confirm_delete">Sei sicuro di voler eliminare tutte le partite?</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
 </resources>

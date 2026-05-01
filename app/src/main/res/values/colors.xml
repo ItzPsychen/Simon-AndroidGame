@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ui colors -->
+    <!-- UI colors -->
     <color name="purple_light">#FFE1C4FF</color>
     <color name="purple">#FF9D46FF</color>
     <color name="blue_dark">#FF536DFE</color>
