@@ -4,8 +4,6 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -13,7 +11,10 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.toColorInt
+
+import com.example.simonsays.R
+import com.example.simonsays.logic.ToneConstants
+import com.example.simonsays.logic.TonePlayer
 
 class ButtonView @JvmOverloads constructor(
     context: Context,
@@ -28,9 +29,10 @@ class ButtonView @JvmOverloads constructor(
     private var customAlpha: Float? = null
     private var showLabel: Boolean = true
     private var glowOffset = 0f
+    private var soundEnabled: Boolean = true
 
-    // tone when any button is pressed
-    private var toneGenerator: ToneGenerator? = null
+    // frequency for the tone when pressed (Option A: AudioTrack)
+    private var frequency: Double = ToneConstants.DEFAULT_FREQUENCY
 
     // buttons transparency (default)
     private val defaultButtonAlpha = 0.6f
@@ -42,7 +44,7 @@ class ButtonView @JvmOverloads constructor(
     // strokes are used for borders
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = "#333333".toColorInt()
+        color = ContextCompat.getColor(context, R.color.button_stroke)
         strokeWidth = 8f
     }
 
@@ -59,23 +61,34 @@ class ButtonView @JvmOverloads constructor(
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
         isClickable = true
+
+        attrs?.let {
+            val typedArray = context.obtainStyledAttributes(it, R.styleable.ButtonView)
+            val strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, ContextCompat.getColor(context, R.color.button_stroke))
+            val strokeWidth = typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 8f)
+            
+            strokePaint.color = strokeColor
+            strokePaint.strokeWidth = strokeWidth
+            
+            typedArray.recycle()
+        }
     }
 
-    // play tone when anything is pressed
+    // play tone using TonePlayer (AudioTrack)
     private fun playSound() {
-        try {
-            if (toneGenerator == null) {
-                toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-            }
-            toneGenerator?.startTone(ToneGenerator.TONE_SUP_PIP, 50)
-        } catch (_: Exception) { }
+        if (soundEnabled) {
+            TonePlayer.playTone(frequency, 150)
+        }
     }
 
-    // called when the view is removed
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        toneGenerator?.release()
-        toneGenerator = null
+    // sets whether the button should play a sound
+    fun setSoundEnabled(enabled: Boolean) {
+        this.soundEnabled = enabled
+    }
+
+    // sets the frequency for the button's tone
+    fun setFrequency(freq: Double) {
+        this.frequency = freq
     }
 
     // configures the buttons with colors and labels
@@ -121,19 +134,35 @@ class ButtonView @JvmOverloads constructor(
     // listener called whenever a button is touched
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+        val isInside = x >= 0 && x <= width && y >= 0 && y <= height
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 isPressedState = true
-                playSound()
                 invalidate()
                 return true
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                isPressedState = false
-                invalidate()
-                if (event.action == MotionEvent.ACTION_UP) {
+            MotionEvent.ACTION_MOVE -> {
+                if (isPressedState != isInside) {
+                    isPressedState = isInside
+                    invalidate()
+                }
+                return true
+            }
+            MotionEvent.ACTION_UP -> {
+                if (isInside) {
+                    playSound() // Tone now starts only on release inside the button
                     performClick()
                 }
+                isPressedState = false
+                invalidate()
+                return true
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                isPressedState = false
+                invalidate()
                 return true
             }
         }

@@ -63,7 +63,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn0"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <!-- button group 1 -->
@@ -79,7 +81,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <!-- button group 2 -->
@@ -95,7 +99,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <!-- button group 3 -->
@@ -111,7 +117,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <!-- button group 4 -->
@@ -127,7 +135,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn4"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <!-- button group 5 -->
@@ -143,7 +153,9 @@
         <com.example.simonsays.ui.components.ButtonView
             android:id="@+id/btn5"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:strokeColor="@color/button_stroke"
+            app:strokeWidth="3dp" />
     </FrameLayout>
 
     <LinearLayout
@@ -158,32 +170,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- delete button -->
+        <!-- START GAME -->
         <FrameLayout
+            android:id="@+id/containerStart"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <com.example.simonsays.ui.components.ButtonView
+                android:id="@+id/btnStartView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:strokeColor="@color/button_stroke"
+                app:strokeWidth="3dp" />
+        </FrameLayout>
+
+        <!-- PAUSE -->
+        <FrameLayout
+            android:id="@+id/containerPause"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:visibility="gone"
             android:clipChildren="false"
             android:clipToPadding="false">
             <com.example.simonsays.ui.components.ButtonView
-                android:id="@+id/btnDeleteView"
+                android:id="@+id/btnPauseView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:strokeColor="@color/button_stroke"
+                app:strokeWidth="3dp" />
         </FrameLayout>
 
-        <!-- end game button -->
+        <!-- END GAME -->
         <FrameLayout
+            android:id="@+id/containerEndGame"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:visibility="gone"
             android:clipChildren="false"
             android:clipToPadding="false">
             <com.example.simonsays.ui.components.ButtonView
                 android:id="@+id/btnEndGameView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:strokeColor="@color/button_stroke"
+                app:strokeWidth="3dp" />
         </FrameLayout>
     </LinearLayout>
 

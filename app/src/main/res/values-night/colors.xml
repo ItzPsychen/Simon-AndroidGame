@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- bright stroke on dark mode -->
+    <color name="button_stroke">#FFFFFF</color>
+</resources>

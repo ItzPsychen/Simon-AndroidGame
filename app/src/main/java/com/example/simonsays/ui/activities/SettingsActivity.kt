@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
+
 import com.example.simonsays.R
 
 class SettingsActivity : BaseActivity() {
@@ -66,13 +67,13 @@ class SettingsActivity : BaseActivity() {
             recreate()
         }
 
-        // RESET DEFAULT BUTTON
+        // RESET DEFAULT
         btnReset.setOnClickListener {
             gameManager.resetToDefault()
             recreate()
         }
 
-        // DELETE ALL BUTTON
+        // DELETE ALL
         btnDelete.setOnClickListener {
             showDeleteConfirmation()
         }

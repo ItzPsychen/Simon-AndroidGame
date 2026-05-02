@@ -31,7 +31,7 @@ abstract class BaseActivity : AppCompatActivity() {
     // can be accessed without an instance of class
     companion object {
         private var lastClickTime: Long = 0
-        private const val DEBOUNCE_TIME = 300L
+        private const val DEBOUNCE_TIME = 50L
         private var isChangingConfig: Boolean = false
     }
 
@@ -131,12 +131,9 @@ abstract class BaseActivity : AppCompatActivity() {
                 isChangingConfig = true
                 onBeforeConfigChanged()
 
-                // flip animation at the end
-                btn.animate().rotationY(90f).setDuration(150).withEndAction {
-                    gameManager.isDarkMode = !gameManager.isDarkMode
-                    val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-                    AppCompatDelegate.setDefaultNightMode(mode)
-                }.start()
+                gameManager.isDarkMode = !gameManager.isDarkMode
+                val mode = if (gameManager.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                AppCompatDelegate.setDefaultNightMode(mode)
             }
         }
 
@@ -149,11 +146,8 @@ abstract class BaseActivity : AppCompatActivity() {
                 isChangingConfig = true
                 onBeforeConfigChanged()
 
-                // flip animation at the end
-                btn.animate().rotationY(90f).setDuration(150).withEndAction {
-                    gameManager.isColorblindMode = !gameManager.isColorblindMode
-                    onColorblindModeChanged(gameManager.isColorblindMode)
-                }.start()
+                gameManager.isColorblindMode = !gameManager.isColorblindMode
+                onColorblindModeChanged(gameManager.isColorblindMode)
             }
         }
 

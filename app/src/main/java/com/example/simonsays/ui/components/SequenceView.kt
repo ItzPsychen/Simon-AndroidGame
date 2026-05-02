@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 
-import androidx.core.graphics.toColorInt
+import androidx.core.content.ContextCompat
 
 class SequenceView @JvmOverloads constructor(
     context: Context,
@@ -33,7 +33,7 @@ class SequenceView @JvmOverloads constructor(
     // stroke for borders like the buttons
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = "#333333".toColorInt()
+        color = ContextCompat.getColor(context, R.color.button_stroke)
         strokeWidth = 8f
     }
 
@@ -68,6 +68,9 @@ class SequenceView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         
+        // update stroke color
+        strokePaint.color = ContextCompat.getColor(context, R.color.button_stroke)
+
         val typedValue = TypedValue()
         context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
         bgPaint.color = typedValue.data

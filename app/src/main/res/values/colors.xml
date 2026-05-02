@@ -27,4 +27,7 @@
     <!-- other color -->
     <color name="gray">#FF9E9E9E</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- stroke color -->
+    <color name="button_stroke">#333333</color>
 </resources>

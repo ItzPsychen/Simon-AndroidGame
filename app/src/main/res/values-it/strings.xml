@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Simon</string>
-    <string name="del">CANCELLA</string>
+    <string name="start">INIZIA PARTITA</string>
+    <string name="pause">PAUSA</string>
     <string name="end">FINE PARTITA</string>
     <string name="master_vol">MASTER</string>
     <string name="music_vol">MUSICA</string>

@@ -2,11 +2,13 @@ package com.example.simonsays.ui.activities
 
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.View
 
 import com.example.simonsays.R
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
 import com.example.simonsays.ui.components.SequenceView
+import com.example.simonsays.logic.ToneConstants
 
 class MainActivity : BaseActivity() {
 
@@ -52,6 +54,11 @@ class MainActivity : BaseActivity() {
                 button.setConfig(colorData.colorRes, colorData.label)
                 button.setShowLabel(gameManager.isColorblindMode)
                 
+                // set specific frequency for each colored button (Option A: AudioTrack)
+                if (index < ToneConstants.COLOR_FREQUENCIES.size) {
+                    button.setFrequency(ToneConstants.COLOR_FREQUENCIES[index])
+                }
+                
                 button.setOnClickListener {
                     sequenceView.addElement(colorData.label, colorData.colorRes)
                 }
@@ -59,24 +66,39 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // setup for delete and end game buttons
+    // setup for control buttons: START GAME, PAUSE, END GAME
     private fun setupControlButtons() {
-        val btnDelete = findViewById<ButtonView>(R.id.btnDeleteView)
+        val btnStart = findViewById<ButtonView>(R.id.btnStartView)
+        val btnPause = findViewById<ButtonView>(R.id.btnPauseView)
         val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
+
+        val containerStart = findViewById<View>(R.id.containerStart)
+        val containerPause = findViewById<View>(R.id.containerPause)
+        val containerEndGame = findViewById<View>(R.id.containerEndGame)
 
         val typedValue = TypedValue()
         theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue, true)
         val controlColor = typedValue.data
 
-        btnDelete.setConfig(controlColor, getString(R.string.del), alpha = 0.2f, textSize = 50f, isBold = false)
+        btnStart.setConfig(controlColor, getString(R.string.start), alpha = 0.2f, textSize = 50f, isBold = false)
+        btnPause.setConfig(controlColor, getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false)
         btnEndGame.setConfig(controlColor, getString(R.string.end), alpha = 0.2f, textSize = 50f, isBold = false)
 
-        // DELETE
-        btnDelete.setOnClickListener {
-            if (sequenceView.getSequenceData().isNotEmpty()) {
-                sequenceView.clear()
-                gameManager.clearSequence()
-            }
+        // disable sound for control buttons
+        btnStart.setSoundEnabled(false)
+        btnPause.setSoundEnabled(false)
+        btnEndGame.setSoundEnabled(false)
+
+        // START GAME: hide START, show PAUSE and END
+        btnStart.setOnClickListener {
+            containerStart.visibility = View.GONE
+            containerPause.visibility = View.VISIBLE
+            containerEndGame.visibility = View.VISIBLE
+        }
+
+        // PAUSE
+        btnPause.setOnClickListener {
+            // TODO
         }
 
         // END GAME
@@ -90,6 +112,10 @@ class MainActivity : BaseActivity() {
                 // all buttons glow as signal
                 gameButtons.forEach { it.glow(300) }
             }
+
+            containerStart.visibility = View.VISIBLE
+            containerPause.visibility = View.GONE
+            containerEndGame.visibility = View.GONE
         }
     }
 

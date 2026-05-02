@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Simon</string>
-    <string name="del">DELETE</string>
+    <string name="start">START GAME</string>
+    <string name="pause">PAUSE</string>
     <string name="end">END GAME</string>
     <string name="master_vol">MASTER</string>
     <string name="music_vol">MUSIC</string>
@@ -17,7 +18,7 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="reset_default">RESET TO DEFAULT</string>
-    <string name="delete_records">DELETE ALL RECORDS</string>
+    <string name="delete_records">DELETE ALL</string>
     <string name="confirm_delete">Are you sure you want to delete all records?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
