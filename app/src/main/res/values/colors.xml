@@ -30,4 +30,7 @@
 
     <!-- stroke color -->
     <color name="button_stroke">#333333</color>
+
+    <!-- top bar background (20% opacity) -->
+    <color name="top_bar_background">#38FFFFFF</color>
 </resources>

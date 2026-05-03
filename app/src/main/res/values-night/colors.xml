@@ -2,4 +2,7 @@
 <resources>
     <!-- bright stroke on dark mode -->
     <color name="button_stroke">#FFFFFF</color>
+
+    <!-- top bar background (20% opacity) -->
+    <color name="top_bar_background">#22FFFFFF</color>
 </resources>

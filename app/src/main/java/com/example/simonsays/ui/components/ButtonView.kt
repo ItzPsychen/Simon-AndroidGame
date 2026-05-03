@@ -15,6 +15,8 @@ import androidx.core.graphics.ColorUtils
 import com.example.simonsays.R
 import com.example.simonsays.logic.ToneConstants
 import com.example.simonsays.logic.TonePlayer
+import com.example.simonsays.logic.GameManager
+import androidx.core.content.withStyledAttributes
 
 class ButtonView @JvmOverloads constructor(
     context: Context,
@@ -63,21 +65,25 @@ class ButtonView @JvmOverloads constructor(
         isClickable = true
 
         attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.ButtonView)
-            val strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, ContextCompat.getColor(context, R.color.button_stroke))
-            val strokeWidth = typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 8f)
-            
-            strokePaint.color = strokeColor
-            strokePaint.strokeWidth = strokeWidth
-            
-            typedArray.recycle()
+            context.withStyledAttributes(it, R.styleable.ButtonView) {
+                val strokeColor = getColor(
+                    R.styleable.ButtonView_strokeColor,
+                    ContextCompat.getColor(context, R.color.button_stroke)
+                )
+                val strokeWidth = getDimension(R.styleable.ButtonView_strokeWidth, 8f)
+
+                strokePaint.color = strokeColor
+                strokePaint.strokeWidth = strokeWidth
+
+            }
         }
     }
 
     // play tone using TonePlayer (AudioTrack)
     private fun playSound() {
         if (soundEnabled) {
-            TonePlayer.playTone(frequency, 150)
+            val volume = GameManager(context).soundVolume / 100f
+            TonePlayer.playTone(frequency, 150, volume)
         }
     }
 
@@ -144,6 +150,7 @@ class ButtonView @JvmOverloads constructor(
                 invalidate()
                 return true
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (isPressedState != isInside) {
                     isPressedState = isInside
@@ -151,15 +158,18 @@ class ButtonView @JvmOverloads constructor(
                 }
                 return true
             }
+
+            // tone starts only on release inside
             MotionEvent.ACTION_UP -> {
                 if (isInside) {
-                    playSound() // Tone now starts only on release inside the button
+                    playSound()
                     performClick()
                 }
                 isPressedState = false
                 invalidate()
                 return true
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressedState = false
                 invalidate()

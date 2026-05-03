@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- container for colored buttons -->
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/buttonFlow"
         android:layout_width="0dp"
@@ -49,16 +50,18 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
+    <!-- sequence view -->
     <com.example.simonsays.ui.components.SequenceView
         android:id="@+id/sequenceView"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/rightSideGuideline"
         app:layout_constraintTop_toTopOf="@id/buttonFlow" />
 
+    <!-- layout for action buttons -->
     <LinearLayout
         android:id="@+id/controlButtonsLayout"
         android:layout_width="0dp"
@@ -76,8 +79,8 @@
         <FrameLayout
             android:id="@+id/containerStart"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="@dimen/land_button_height"
+            android:layout_marginBottom="0dp"
             android:clipChildren="false"
             android:clipToPadding="false">
             <com.example.simonsays.ui.components.ButtonView
@@ -85,14 +88,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:strokeColor="@color/button_stroke"
-                app:strokeWidth="3dp" />
+                app:strokeWidth="@dimen/stroke_width" />
         </FrameLayout>
 
         <!-- PAUSE -->
         <FrameLayout
             android:id="@+id/containerPause"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/land_button_height"
             android:layout_marginBottom="16dp"
             android:visibility="gone"
             android:clipChildren="false"
@@ -102,14 +105,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:strokeColor="@color/button_stroke"
-                app:strokeWidth="3dp" />
+                app:strokeWidth="@dimen/stroke_width" />
         </FrameLayout>
 
         <!-- END GAME -->
         <FrameLayout
             android:id="@+id/containerEndGame"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/vert_button_height"
             android:visibility="gone"
             android:clipChildren="false"
             android:clipToPadding="false">
@@ -118,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:strokeColor="@color/button_stroke"
-                app:strokeWidth="3dp" />
+                app:strokeWidth="@dimen/stroke_width" />
         </FrameLayout>
     </LinearLayout>
 
@@ -126,7 +129,7 @@
     <FrameLayout
         android:id="@+id/grp0"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -137,14 +140,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
 
     <!-- button group 1 -->
     <FrameLayout
         android:id="@+id/grp1"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -155,14 +158,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
 
     <!-- button group 2 -->
     <FrameLayout
         android:id="@+id/grp2"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -173,14 +176,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
 
     <!-- button group 3 -->
     <FrameLayout
         android:id="@+id/grp3"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -191,14 +194,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
 
     <!-- button group 4 -->
     <FrameLayout
         android:id="@+id/grp4"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -209,14 +212,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
 
     <!-- button group 5 -->
     <FrameLayout
         android:id="@+id/grp5"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/land_button_height"
         android:clipChildren="false"
         android:clipToPadding="false">
         <com.example.simonsays.ui.components.ButtonShadowView
@@ -227,7 +230,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:strokeColor="@color/button_stroke"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="@dimen/stroke_width" />
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

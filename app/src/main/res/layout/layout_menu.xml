@@ -1,48 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/menuContainer"
+    android:id="@+id/topBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="32dp"
-    android:paddingBottom="10dp"
-    android:orientation="horizontal"
-    android:gravity="center"
-    tools:ignore="HardcodedText">
+    android:orientation="vertical"
+    android:background="@color/top_bar_background">
 
-    <!-- THEME -->
-    <ImageView
-        android:id="@+id/btnTheme"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:src="@drawable/lightmode_icon"
-        android:contentDescription="theme" />
+    <!-- MENU -->
+    <LinearLayout
+        android:id="@+id/menuContainer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:orientation="horizontal"
+        android:gravity="center"
+        tools:ignore="HardcodedText,InefficientWeight">
 
-    <!-- COLORBLIND -->
-    <ImageView
-        android:id="@+id/btnColorblind"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:src="@drawable/view_icon"
-        android:contentDescription="colorblind" />
+        <!-- THEME -->
+        <ImageView
+            android:id="@+id/btnTheme"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/lightmode_icon"
+            android:contentDescription="theme"
+            tools:ignore="NestedWeights" />
 
-    <!-- RECORDS -->
-    <ImageView
-        android:id="@+id/btnRecords"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:src="@drawable/records_icon"
-        android:contentDescription="records" />
+        <!-- COLORBLIND -->
+        <ImageView
+            android:id="@+id/btnColorblind"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/view_icon"
+            android:contentDescription="colorblind" />
 
-    <!-- SETTINGS -->
-    <ImageView
-        android:id="@+id/btnSettings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:src="@drawable/settings_icon"
-        android:contentDescription="settings" />
+        <!-- RECORDS -->
+        <ImageView
+            android:id="@+id/btnRecords"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/records_icon"
+            android:contentDescription="records" />
+
+        <!-- SETTINGS -->
+        <ImageView
+            android:id="@+id/btnSettings"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/settings_icon"
+            android:contentDescription="settings" />
+    </LinearLayout>
+
+    <!-- top bar lower border -->
+    <View
+        android:id="@+id/topBarBorder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stroke_width"
+        android:background="@color/button_stroke" />
 </LinearLayout>

@@ -1,7 +1,5 @@
 package com.example.simonsays.ui.components
 
-import com.example.simonsays.R
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
@@ -10,6 +8,8 @@ import android.util.TypedValue
 import android.view.View
 
 import androidx.core.content.ContextCompat
+
+import com.example.simonsays.R
 
 class SequenceView @JvmOverloads constructor(
     context: Context,
@@ -34,7 +34,7 @@ class SequenceView @JvmOverloads constructor(
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         color = ContextCompat.getColor(context, R.color.button_stroke)
-        strokeWidth = 8f
+        strokeWidth = context.resources.getDimension(R.dimen.stroke_width)
     }
 
     // placeholder that says "Press the buttons"
@@ -74,7 +74,9 @@ class SequenceView @JvmOverloads constructor(
         val typedValue = TypedValue()
         context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
         bgPaint.color = typedValue.data
-        bgPaint.alpha = 51 
+
+        // 51 over 256 (20%)
+        bgPaint.alpha = 51
 
         val inset = strokePaint.strokeWidth / 2f
         val rect = RectF(inset, inset, width.toFloat() - inset, height.toFloat() - inset)

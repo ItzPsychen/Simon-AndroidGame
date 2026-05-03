@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Simon</string>
     <string name="start">START GAME</string>
@@ -22,4 +23,13 @@
     <string name="confirm_delete">Are you sure you want to delete all records?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="cancel">CANCEL</string>
+    <string name="confirm">CONFIRM DELETION</string>
+
+    <!-- RECORDS -->
+    <string name="top_scores">TOP 3 SCORES</string>
+    <string name="recent_games">RECENT GAMES</string>
+    <string name="_1st" translatable="false">1st</string>
+    <string name="_2nd" translatable="false">2nd</string>
+    <string name="_3rd" translatable="false">3rd</string>
 </resources>

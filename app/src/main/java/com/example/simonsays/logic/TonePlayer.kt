@@ -3,6 +3,7 @@ package com.example.simonsays.logic
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+
 import kotlin.math.sin
 
 object TonePlayer {
@@ -10,7 +11,7 @@ object TonePlayer {
     // standard rate value
     private const val SAMPLE_RATE = 44100
 
-    fun playTone(frequency: Double, durationMs: Int) {
+    fun playTone(frequency: Double, durationMs: Int, settingsVolume: Float = 1.0f) {
         val numSamples = (durationMs * SAMPLE_RATE / 1000)
         val samples = ShortArray(numSamples)
         val angleStep = 2.0 * Math.PI * frequency / SAMPLE_RATE
@@ -25,7 +26,7 @@ object TonePlayer {
             } else {
                 1.0
             }
-            samples[i] = (sin(i * angleStep) * Short.MAX_VALUE * volume).toInt().toShort()
+            samples[i] = (sin(i * angleStep) * Short.MAX_VALUE * volume * settingsVolume).toInt().toShort()
         }
 
         // audiotrack builder
@@ -46,7 +47,7 @@ object TonePlayer {
         // audiotrack player
         audioTrack.write(samples, 0, samples.size)
         audioTrack.play()
-        
+
         // static mode with manual release after each play
         Thread {
             Thread.sleep(durationMs.toLong() + 100)

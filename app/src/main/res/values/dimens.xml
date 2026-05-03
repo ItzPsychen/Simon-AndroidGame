@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stroke_width">3dp</dimen>
+    <dimen name="top_bar_height">80dp</dimen>
+    <dimen name="vert_button_height">140dp</dimen>
+    <dimen name="land_button_height">80dp</dimen>
+</resources>

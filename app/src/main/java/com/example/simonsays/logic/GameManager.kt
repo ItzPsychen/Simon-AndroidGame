@@ -77,7 +77,7 @@ class GameManager(context: Context) {
             putBoolean("colorblind_mode", true)
             putBoolean("is_dark_mode", false)
             putBoolean("sound_enabled", true)
-            putInt("sound_volume", 70)
+            putInt("sound_volume", 50)
         }
     }
 
@@ -98,6 +98,6 @@ class GameManager(context: Context) {
 
     // getter and setter for sound effects volume
     var soundVolume: Int
-        get() = sharedPref.getInt("sound_volume", 70)
+        get() = sharedPref.getInt("sound_volume", 50)
         set(value) = sharedPref.edit { putInt("sound_volume", value) }
 }

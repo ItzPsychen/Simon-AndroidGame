@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Simon</string>
     <string name="start">INIZIA PARTITA</string>
@@ -17,9 +18,15 @@
     <string name="dark_mode">Scuro</string>
     <string name="on">SI</string>
     <string name="off">NO</string>
-    <string name="reset_default">RIPRISTINA</string>
+    <string name="reset_default">RIPRISTINA PREDEFINITI</string>
     <string name="delete_records">ELIMINA TUTTO</string>
     <string name="confirm_delete">Sei sicuro di voler eliminare tutte le partite?</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="cancel">ANNULLA</string>
+    <string name="confirm">CONFERMA ELIMINAZIONE</string>
+
+    <!-- RECORDS -->
+    <string name="top_scores">I MIGLIORI 3</string>
+    <string name="recent_games">PARTITE RECENTI</string>
 </resources>

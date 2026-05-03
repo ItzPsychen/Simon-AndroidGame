@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
                 button.setConfig(colorData.colorRes, colorData.label)
                 button.setShowLabel(gameManager.isColorblindMode)
                 
-                // set specific frequency for each colored button (Option A: AudioTrack)
+                // set specific frequency for each colored button
                 if (index < ToneConstants.COLOR_FREQUENCIES.size) {
                     button.setFrequency(ToneConstants.COLOR_FREQUENCIES[index])
                 }
