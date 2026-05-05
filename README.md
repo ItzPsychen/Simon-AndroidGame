@@ -4,18 +4,18 @@ A variant of the **Simon** game, developed as a native Android application for t
 
 ---   
 
-## 🛠 Requirements
+## Requirements
 
 ### 1. Main Game Screen
 * [x] **Color Matrix (3x2)**: Fixed grid with Red (`R`), Green (`G`), Blue (`B`), Magenta (`M`), Yellow (`Y`) and Cyan (`C`).
 * [x] **Dynamic Display**: Text area showing the pressed sequence using English initials (also colored).
-* [ ] **Button Logic**: `Start Game` (starts the game), `Pause` (pauses the game) and `End Game` (terminates and stores).
-* [ ] **Show Game Sequence**: The game once started, round by round, shows a sequence that the player has to replicate (after each the sequence gets longer by `1`).
-* [ ] **Button Sounds**: During the game, colored buttons make different sounds (useful to better memorize the sequence).
+* [x] **Button Logic**: `Start Game` (starts the game), `Pause` (pauses the game) and `End Game` (terminates and stores).
+* [x] **Show Game Sequence**: The game once started, round by round, shows a sequence that the player has to replicate (after each the sequence gets longer by `1`).
+* [x] **Button Sounds**: During the game, colored buttons make different sounds (useful to better memorize the sequence).
 
 ### 2. Games History Screen
-* [ ] **Dynamic List**: Displays all created games, with the final error highlighted.
-* [ ] ${\color{green}[extra]}$ **Top 3 Scores**: On top are displayed the best scores.
+* [x] **Dynamic List**: Displays all created games, with the mistake highlighted.
+* [x] ${\color{green}[extra]}$ **Top 3 Scores**: On top are displayed the best scores.
 * [x] **Item Details**: Number of presses on the left, full sequence (truncated with `...`) on the right.
 * [x] **Navigation**: System "Back" button returns to the main screen.
 
