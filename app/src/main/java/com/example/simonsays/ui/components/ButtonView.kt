@@ -11,12 +11,12 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.content.withStyledAttributes
 
 import com.example.simonsays.R
-import com.example.simonsays.logic.ToneConstants
+import com.example.simonsays.logic.TonePlayer.ToneConstants
 import com.example.simonsays.logic.TonePlayer
 import com.example.simonsays.logic.GameManager
-import androidx.core.content.withStyledAttributes
 
 class ButtonView @JvmOverloads constructor(
     context: Context,
@@ -80,7 +80,7 @@ class ButtonView @JvmOverloads constructor(
     }
 
     // play tone using TonePlayer (AudioTrack)
-    private fun playSound() {
+    fun playSound() {
         if (soundEnabled) {
             val volume = GameManager(context).soundVolume / 100f
             TonePlayer.playTone(frequency, 150, volume)
@@ -140,6 +140,8 @@ class ButtonView @JvmOverloads constructor(
     // listener called whenever a button is touched
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) return false
+
         val x = event.x
         val y = event.y
         val isInside = x >= 0 && x <= width && y >= 0 && y <= height

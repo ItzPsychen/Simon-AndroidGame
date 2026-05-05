@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/menuView"
         app:layout_constraintVertical_bias="0.5" />
 
+    <!-- gap divider -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightSideGuideline"
         android:layout_width="wrap_content"
@@ -112,7 +113,7 @@
         <FrameLayout
             android:id="@+id/containerEndGame"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/vert_button_height"
+            android:layout_height="@dimen/land_button_height"
             android:visibility="gone"
             android:clipChildren="false"
             android:clipToPadding="false">

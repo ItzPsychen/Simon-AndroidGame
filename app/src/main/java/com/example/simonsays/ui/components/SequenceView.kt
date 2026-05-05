@@ -1,14 +1,15 @@
 package com.example.simonsays.ui.components
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-
 import androidx.core.content.ContextCompat
-
 import com.example.simonsays.R
 
 class SequenceView @JvmOverloads constructor(
@@ -18,6 +19,8 @@ class SequenceView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val sequence = mutableListOf<Pair<String, Int>>()
+    private var sequenceAlpha = 255
+    private var clearAnimator: ValueAnimator? = null
 
     // text for the sequence
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -26,6 +29,7 @@ class SequenceView @JvmOverloads constructor(
         typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
     }
 
+    // applies the background color
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
@@ -48,14 +52,41 @@ class SequenceView @JvmOverloads constructor(
 
     // add element to the sequence
     fun addElement(label: String, color: Int) {
+        // Cancel any ongoing clear animation and reset alpha
+        clearAnimator?.cancel()
+        sequenceAlpha = 255
+        
         sequence.add(label to color)
         invalidate()
     }
 
-    // delete all elements from the sequence
-    fun clear() {
-        sequence.clear()
-        invalidate()
+    // clears the sequence making the text fading away
+    fun clear(fadeAway: Boolean = false) {
+        clearAnimator?.cancel()
+
+        if (fadeAway && sequence.isNotEmpty()) {
+            clearAnimator = ValueAnimator.ofInt(255, 0).apply {
+                duration = 300
+                addUpdateListener { animator ->
+                    sequenceAlpha = animator.animatedValue as Int
+                    invalidate()
+                }
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        sequence.clear()
+                        sequenceAlpha = 255
+                        clearAnimator = null
+                        invalidate()
+                    }
+                })
+                start()
+            }
+        } else {
+            sequence.clear()
+            sequenceAlpha = 255
+            clearAnimator = null
+            invalidate()
+        }
     }
 
     // return the sequence data
@@ -122,6 +153,7 @@ class SequenceView @JvmOverloads constructor(
         var currentX = padding
         if (visibleCount < sequence.size) {
             textPaintLocal.color = Color.WHITE
+            textPaintLocal.alpha = sequenceAlpha
             canvas.drawText(ellipsis, currentX, centerY, textPaintLocal)
             currentX += ellipsisWidth
         }
@@ -130,11 +162,13 @@ class SequenceView @JvmOverloads constructor(
         for (i in startIndex until sequence.size) {
             val item = sequence[i]
             textPaintLocal.color = item.second
+            textPaintLocal.alpha = sequenceAlpha
             canvas.drawText(item.first, currentX, centerY, textPaintLocal)
             currentX += textPaintLocal.measureText(item.first)
             
             if (i < sequence.size - 1) {
                 textPaintLocal.color = Color.WHITE
+                textPaintLocal.alpha = sequenceAlpha
                 canvas.drawText(comma, currentX, centerY, textPaintLocal)
                 currentX += commaWidth
             }

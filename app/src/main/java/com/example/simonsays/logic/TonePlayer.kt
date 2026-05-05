@@ -7,29 +7,66 @@ import android.media.AudioTrack
 import kotlin.math.sin
 
 object TonePlayer {
+    object ToneConstants {
+        // frequencies for colored buttons
+        val COLOR_FREQUENCIES = listOf(
+            200.00, // red
+            260.00, // green
+            330.00, // blue
+            410.00, // magenta
+            500.00, // yellow
+            600.00  // cyan
+        )
 
-    // standard rate value
+        // default frequency
+        const val DEFAULT_FREQUENCY = 440.0
+    }
+
     private const val SAMPLE_RATE = 44100
+    private val trackCache = mutableMapOf<String, AudioTrack>()
 
-    fun playTone(frequency: Double, durationMs: Int, settingsVolume: Float = 1.0f) {
+    // play tone using AudioTrack
+    fun playTone(frequency: Double, durationMs: Int, volume: Float = 1.0f) {
+        val key = "$frequency-$durationMs"
+        
+        try {
+            val audioTrack = trackCache.getOrPut(key) {
+                createStaticTrack(frequency, durationMs)
+            }
+
+            audioTrack.setVolume(volume)
+            
+            if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING) {
+                audioTrack.stop()
+                audioTrack.reloadStaticData()
+            }
+            
+            audioTrack.play()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // creates the static track for the tone
+    private fun createStaticTrack(frequency: Double, durationMs: Int): AudioTrack {
         val numSamples = (durationMs * SAMPLE_RATE / 1000)
         val samples = ShortArray(numSamples)
         val angleStep = 2.0 * Math.PI * frequency / SAMPLE_RATE
 
-        // applies a basic fade-in/fade-out
+        // generate sine wave with fade-in/fade-out to avoid clicking sounds
         for (i in 0 until numSamples) {
             val fadeCount = numSamples / 10
-            val volume = if (i < fadeCount) {
+            val fadeVolume = if (i < fadeCount) {
                 i.toDouble() / fadeCount
             } else if (i > numSamples - fadeCount) {
                 (numSamples - i).toDouble() / fadeCount
             } else {
                 1.0
             }
-            samples[i] = (sin(i * angleStep) * Short.MAX_VALUE * volume * settingsVolume).toInt().toShort()
+            samples[i] = (sin(i * angleStep) * Short.MAX_VALUE * fadeVolume).toInt().toShort()
         }
 
-        // audiotrack builder
+        // builds the audioTrack and returns it
         val audioTrack = AudioTrack.Builder()
             .setAudioAttributes(AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_GAME)
@@ -44,17 +81,7 @@ object TonePlayer {
             .setTransferMode(AudioTrack.MODE_STATIC)
             .build()
 
-        // audiotrack player
         audioTrack.write(samples, 0, samples.size)
-        audioTrack.play()
-
-        // static mode with manual release after each play
-        Thread {
-            Thread.sleep(durationMs.toLong() + 100)
-            try {
-                audioTrack.stop()
-                audioTrack.release()
-            } catch (e: Exception) { }
-        }.start()
+        return audioTrack
     }
 }

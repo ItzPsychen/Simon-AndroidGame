@@ -23,7 +23,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="120dp"
+        android:paddingTop="60dp"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,14 +32,14 @@
         app:layout_constraintWidth_max="500dp"
         app:layout_constraintWidth_percent="0.9">
 
-        <!-- SOUND EFFECTS (label + seekbar) -->
+        <!-- SOUND EFFECTS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -80,18 +80,66 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- GAME SPEED -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/game_speed"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSpeedValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="x1.0" />
+
+                <SeekBar
+                    android:id="@+id/sbGameSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:max="4"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:progressBackgroundTint="#40FFFFFF"
+                    android:progressTint="@color/green"
+                    android:splitTrack="false"
+                    android:thumb="@null"
+                    android:thumbOffset="0dp" />
+            </LinearLayout>
+        </LinearLayout>
+
         <!-- COLORBLIND -->
         <LinearLayout
             android:id="@+id/btnToggleColorblind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -116,13 +164,13 @@
             android:id="@+id/btnToggleLanguage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -147,13 +195,13 @@
             android:id="@+id/btnToggleTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="72dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginBottom="32dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -173,7 +221,6 @@
                 tools:text="DARK" />
         </LinearLayout>
 
-        <!-- BUTTONS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -185,7 +232,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 android:text="@string/reset_default"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"

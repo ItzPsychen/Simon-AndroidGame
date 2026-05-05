@@ -32,17 +32,19 @@ class RecordsActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
+    // called when resuming the activity
     override fun onResume() {
         super.onResume()
         refreshHistory()
     }
 
+    // reloads the history
     private fun refreshHistory() {
-        val allSequences = gameManager.getAllSequences()
+        val historyEntries = gameManager.getAllSequences()
         
-        // update top 3 scores
-        val topScores = allSequences
-            .map { it.size }
+        // update top 3 scores based on the score field
+        val topScores = historyEntries
+            .map { it.score }
             .sortedDescending()
             .take(3)
 
@@ -56,6 +58,6 @@ class RecordsActivity : BaseActivity() {
         }
 
         // update entire list
-        recyclerView.adapter = SequenceAdapter(allSequences)
+        recyclerView.adapter = SequenceAdapter(historyEntries)
     }
 }

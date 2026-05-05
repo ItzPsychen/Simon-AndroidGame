@@ -3,6 +3,7 @@
     <string name="app_name">Simon</string>
     <string name="start">INIZIA PARTITA</string>
     <string name="pause">PAUSA</string>
+    <string name="resume">RIPRENDI</string>
     <string name="end">FINE PARTITA</string>
     <string name="master_vol">MASTER</string>
     <string name="music_vol">MUSICA</string>
@@ -11,6 +12,7 @@
 
     <!-- SETTINGS -->
     <string name="sound_effects">Effetti Sonori</string>
+    <string name="game_speed">Velocità di gioco</string>
     <string name="colorblind_label">Daltonismo</string>
     <string name="language_label">Lingua</string>
     <string name="theme_label">Tema</string>

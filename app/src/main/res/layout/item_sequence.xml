@@ -8,6 +8,7 @@
     android:background="#22000000"
     android:gravity="center_vertical">
 
+    <!-- count value (score) -->
     <TextView
         android:id="@+id/tvCount"
         android:layout_width="40dp"
@@ -17,6 +18,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!-- sequence played -->
     <TextView
         android:id="@+id/tvSequence"
         android:layout_width="match_parent"
