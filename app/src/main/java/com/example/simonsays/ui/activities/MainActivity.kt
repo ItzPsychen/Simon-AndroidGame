@@ -10,11 +10,11 @@ import android.view.View
 import android.widget.Toast
 
 import com.example.simonsays.R
+import com.example.simonsays.logic.GameManager
+import com.example.simonsays.logic.TonePlayer.ToneConstants
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
 import com.example.simonsays.ui.components.SequenceView
-import com.example.simonsays.logic.TonePlayer.ToneConstants
-import com.example.simonsays.logic.GameManager
 
 import kotlin.random.Random
 
@@ -170,7 +170,16 @@ class MainActivity : BaseActivity() {
         playerIndex = 0
         sequenceIndexToShow = 0
         val colors = SimonColor.entries.toTypedArray()
-        gameSequence.add(colors[Random.nextInt(colors.size)])
+        if (gameManager.isRepetitionAllowed) {
+            gameSequence.add(colors[Random.nextInt(colors.size)])
+        } else {
+            val lastColorIndex = gameSequence.lastOrNull()?.ordinal ?: -1
+            var nextColorIndex: Int
+            do {
+                nextColorIndex = Random.nextInt(colors.size)
+            } while (nextColorIndex == lastColorIndex)
+            gameSequence.add(colors[nextColorIndex])
+        }
         showSequence()
     }
 
@@ -187,7 +196,10 @@ class MainActivity : BaseActivity() {
         
         // default delay is 600ms
         val delay = (600 / gameManager.gameSpeed).toLong()
-        
+
+        // wait at least 1000ms
+        val currentDelay = if (sequenceIndexToShow == 0) 1000L.coerceAtLeast(delay) else delay
+
         handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
             if (!isGameRunning || isPaused) {
@@ -214,7 +226,7 @@ class MainActivity : BaseActivity() {
                 sequenceIndexToShow = 0 
                 setButtonsEnabled(true)
             }
-        }, delay)
+        }, currentDelay)
     }
 
     // handler for player input
@@ -266,6 +278,7 @@ class MainActivity : BaseActivity() {
         }
         
         if (historySequence.isNotEmpty() || score > 0) {
+            // TODO: change to SqliteDatabase
             gameManager.addSequence(score, historySequence)
         }
         

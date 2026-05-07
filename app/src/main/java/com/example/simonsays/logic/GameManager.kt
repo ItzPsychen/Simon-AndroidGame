@@ -107,6 +107,7 @@ class GameManager(context: Context) {
             putBoolean("colorblind_mode", true)
             putBoolean("is_dark_mode", false)
             putBoolean("sound_enabled", true)
+            putBoolean("is_repetition_allowed", true)
             putInt("sound_volume", 50)
             putFloat("game_speed", 1.0f)
         }
@@ -126,6 +127,11 @@ class GameManager(context: Context) {
     var isDarkMode: Boolean
         get() = sharedPref.getBoolean("is_dark_mode", false)
         set(value) = sharedPref.edit { putBoolean("is_dark_mode", value) }
+
+    // getter/setter for dark mode
+    var isRepetitionAllowed: Boolean
+        get() = sharedPref.getBoolean("is_repetition_allowed", true)
+        set(value) = sharedPref.edit { putBoolean("is_repetition_allowed", value) }
 
     // getter/setter for sound volume
     var soundVolume: Int

@@ -23,7 +23,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="60dp"
+        android:paddingTop="40dp"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,8 +38,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -86,8 +85,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -138,8 +136,7 @@
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -159,6 +156,33 @@
                 tools:text="ON" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ckbToggleRepetitions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/repetitions_label"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <CheckBox
+                android:id="@+id/ckbRepetitions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-16dp"
+                android:checked="true"/>
+        </LinearLayout>
+
         <!-- LANGUAGE -->
         <LinearLayout
             android:id="@+id/btnToggleLanguage"
@@ -169,8 +193,7 @@
             android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="0dp"

@@ -16,6 +16,7 @@
     <string name="colorblind_label">Daltonismo</string>
     <string name="language_label">Lingua</string>
     <string name="theme_label">Tema</string>
+    <string name="repetitions_label">Accetta Ripetizioni</string>
     <string name="light_mode">Chiaro</string>
     <string name="dark_mode">Scuro</string>
     <string name="on">SI</string>

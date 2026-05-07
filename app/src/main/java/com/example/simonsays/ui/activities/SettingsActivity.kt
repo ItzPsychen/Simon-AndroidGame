@@ -3,6 +3,7 @@ package com.example.simonsays.ui.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
@@ -18,9 +19,9 @@ class SettingsActivity : BaseActivity() {
     private lateinit var tvColorblind: TextView
     private lateinit var tvLanguage: TextView
     private lateinit var tvTheme: TextView
-    
     private lateinit var btnReset: Button
     private lateinit var btnDelete: Button
+    private lateinit var ckbRepetitions: CheckBox
     private var isConfirmingDelete = false
 
     private val speedValues = listOf(0.25f, 0.5f, 1.0f, 2.0f, 4.0f)
@@ -38,11 +39,13 @@ class SettingsActivity : BaseActivity() {
         tvColorblind = findViewById(R.id.tvColorblindValue)
         tvLanguage = findViewById(R.id.tvLanguageValue)
         tvTheme = findViewById(R.id.tvThemeValue)
+        ckbRepetitions = findViewById(R.id.ckbRepetitions)
 
         // buttons for each functionality
         val btnToggleColorblind = findViewById<LinearLayout>(R.id.btnToggleColorblind)
         val btnToggleLanguage = findViewById<LinearLayout>(R.id.btnToggleLanguage)
         val btnToggleTheme = findViewById<LinearLayout>(R.id.btnToggleTheme)
+        val btnToggleRepetitions = findViewById<LinearLayout>(R.id.ckbToggleRepetitions)
         btnReset = findViewById(R.id.btnResetDefault)
         btnDelete = findViewById(R.id.btnDeleteAllRecords)
 
@@ -101,6 +104,13 @@ class SettingsActivity : BaseActivity() {
             recreate()
         }
 
+        // REPETITIONS listener
+        ckbRepetitions.setOnCheckedChangeListener { _, isChecked ->
+            if (ckbRepetitions.isPressed) {
+                gameManager.isRepetitionAllowed = isChecked
+            }
+        }
+
         // RESET DEFAULT / CANCEL
         btnReset.setOnClickListener {
             if (isConfirmingDelete) {
@@ -144,6 +154,7 @@ class SettingsActivity : BaseActivity() {
         tvColorblind.text = if (gameManager.isColorblindMode) getString(R.string.on) else getString(R.string.off)
         tvLanguage.text = if (gameManager.isEnglishLanguage) "EN" else "IT"
         tvTheme.text = if (gameManager.isDarkMode) getString(R.string.dark_mode).uppercase() else getString(R.string.light_mode).uppercase()
+        ckbRepetitions.isChecked = gameManager.isRepetitionAllowed
     }
 
     // changes between normal state and delete confirmation state
