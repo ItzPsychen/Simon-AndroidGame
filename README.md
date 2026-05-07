@@ -1,31 +1,41 @@
 # Simon - Android Game
 
-A variant of the **Simon** game, developed as a native Android application for the "Embedded Systems Programming" course (2025-26).
+A variant of the classic **Simon** game, developed as a native Android application for the "Embedded Systems Programming" course (2025-26).
 
----   
+---
 
-## Requirements
+## List of Requirements (Summary)
 
 ### 1. Main Game Screen
-* [x] **Color Matrix (3x2)**: Fixed grid with Red (`R`), Green (`G`), Blue (`B`), Magenta (`M`), Yellow (`Y`) and Cyan (`C`).
-* [x] **Dynamic Display**: Text area showing the pressed sequence using English initials (also colored).
-* [x] **Button Logic**: `Start Game` (starts the game), `Pause` (pauses the game) and `End Game` (terminates and stores).
-* [x] **Show Game Sequence**: The game once started, round by round, shows a sequence that the player has to replicate (after each the sequence gets longer by `1`).
-* [x] **Button Sounds**: During the game, colored buttons make different sounds (useful to better memorize the sequence).
+* [x] **Color Matrix (3x2)**: A fixed grid featuring Red (`R`), Green (`G`), Blue (`B`), Magenta (`M`), Yellow (`Y`), and Cyan (`C`).
+* [ ] **Dynamic Display Area**: A multiline text area that displays the sequence of buttons pressed using their initials. The text is color-coded to match the corresponding buttons.
+* [x] **Button Logic**:
+    * `Start Game`: Initializes the session and plays the first sequence.
+    * `Pause`: Suspends the game and displays the current sequence without replaying it from the beginning.
+    * `End Game`: Terminates the session and saves the progress to history without recording a mistake.
+* [x] **Sequence Progression**: Round by round, the game displays an increasingly long sequence (incremented by `1`) that the player must replicate.
+* [x] **Audio Feedback**: Colored buttons produce distinct tones to assist with memorization; functional buttons (Start, Pause, End) remain silent.
 
 ### 2. Games History Screen
-* [x] **Dynamic List**: Displays all created games, with the mistake highlighted.
-* [x] ${\color{green}[extra]}$ **Top 3 Scores**: On top are displayed the best scores.
-* [x] **Item Details**: Number of presses on the left, full sequence (truncated with `...`) on the right.
-* [x] **Navigation**: System "Back" button returns to the main screen.
+* [x] **Dynamic List**: Displays all recorded game sessions. If a game ended due to an error, the incorrect move is highlighted.
+* [x] **Top 3 Scores**: The three highest scores are prominently displayed at the top of the screen.
+* [ ] **Item Details**: Each entry shows the numerical score (total correct presses) on the left and the full sequence on the right. Long sequences are truncated with an ellipsis (`...`) but can be expanded by tapping the item.
+* [x] **Navigation**: The system "Back" button or a dedicated menu button returns the user to the Main Screen.
 
 ### 3. Settings Screen
-* [x] ${\color{green}[extra]}$ **Sound Effects**: Slider that allows the user to set the volume.
-* [x] ${\color{green}[extra]}$ **Functionalities**: `Colorblind Mode` enables the letters on each colored button, `Language` changes the language (`IT/EN`) and `Theme` allows to select light or dark mode.
-* [x] ${\color{green}[extra]}$ **Action Buttons**: `Reset to Default` brings back the default settings and `Delete All` that clears all the game history (a confirmation pop-up would appear).
+* [x] **Sound Effects**: A slider to adjust the application volume.
+* [x] **Game Speed**: A slider with discrete values (`0.25x`, `0.5x`, `1.0x`, `2.0x`, `4.0x`) to control the playback speed of the visual sequence.
+* [ ] **Consecutive Repetitions**: A toggle (checkbox) to enable or disable the occurrence of the same color appearing twice in a row.
+* [x] **Accessibility & Customization**:
+    * `Colorblind Mode`: Toggles visible initials on the colored buttons.
+    * `Language`: Switches the UI between Italian (`IT`) and English (`EN`).
+    * `Theme`: Allows the user to select between Light and Dark modes.
+* [x] **Data Management**:
+    * `Reset to Default`: Restores all original settings.
+    * `Delete All`: Clears the entire game history (requires a second tap on a `Confirm` button).
 
 ### 4. Layout and Localization
-* [x] **Adaptive Layout**: Different structures for Portrait and Landscape modes.
-* [x] **Localization**: Support for Italian (`IT`) and English (`EN`).
-* [x] **Instance State**: Current sequence is preserved during screen rotation and other actions.
-* [ ] **Game Data**: All data about the game history is saved using SqliteDatabase
+* [ ] **Adaptive Layout**: Optimized UI structures for both Portrait and Landscape orientations, ensuring the design scales across various screen dimensions.
+* [x] **Localization**: Full support for Italian (`IT`) and English (`EN`).
+* [x] **State Preservation**: The current game state and sequence are preserved during configuration changes (e.g., screen rotation).
+* [ ] **Persistent Storage**: All game history data is managed and saved using a `SQLiteDatabase`.
