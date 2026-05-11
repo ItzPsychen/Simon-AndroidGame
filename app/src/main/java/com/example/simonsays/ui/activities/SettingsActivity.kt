@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 
 import com.example.simonsays.R
 
@@ -22,6 +24,7 @@ class SettingsActivity : BaseActivity() {
     private lateinit var btnReset: Button
     private lateinit var btnDelete: Button
     private lateinit var ckbRepetitions: CheckBox
+    private var scrollView: ScrollView? = null
     private var isConfirmingDelete = false
 
     private val speedValues = listOf(0.25f, 0.5f, 1.0f, 2.0f, 4.0f)
@@ -32,6 +35,7 @@ class SettingsActivity : BaseActivity() {
         setupMenuButtons()
 
         // initialize UI components
+        scrollView = findViewById(R.id.settingsScrollView)
         sbIntensity = findViewById(R.id.sbSoundIntensity)
         sbGameSpeed = findViewById(R.id.sbGameSpeed)
         tvVolumeValue = findViewById(R.id.tvVolumeValue)
@@ -52,6 +56,14 @@ class SettingsActivity : BaseActivity() {
         // restore state if recreated
         if (savedInstanceState != null) {
             isConfirmingDelete = savedInstanceState.getBoolean("isConfirmingDelete", false)
+            
+            // restore scroll position
+            val scrollY = savedInstanceState.getInt("scroll_y", 0)
+            if (scrollY != 0) {
+                scrollView?.post {
+                    scrollView?.scrollTo(0, scrollY)
+                }
+            }
         }
 
         // loads the current settings (saved ones)
@@ -105,10 +117,13 @@ class SettingsActivity : BaseActivity() {
         }
 
         // REPETITIONS listener
-        ckbRepetitions.setOnCheckedChangeListener { _, isChecked ->
-            if (ckbRepetitions.isPressed) {
-                gameManager.isRepetitionAllowed = isChecked
+        btnToggleRepetitions.setOnClickListener {
+            if (gameManager.loadSavedSequence().isRunning) {
+                Toast.makeText(this, getString(R.string.repetition_locked), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            gameManager.isRepetitionAllowed = !gameManager.isRepetitionAllowed
+            updateUI()
         }
 
         // RESET DEFAULT / CANCEL
@@ -138,6 +153,11 @@ class SettingsActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("isConfirmingDelete", isConfirmingDelete)
+        
+        // save scroll position
+        scrollView?.let {
+            outState.putInt("scroll_y", it.scrollY)
+        }
     }
 
     // updates UI whenever the settings change
@@ -152,9 +172,16 @@ class SettingsActivity : BaseActivity() {
         tvSpeedValue.text = "x$currentSpeed"
         
         tvColorblind.text = if (gameManager.isColorblindMode) getString(R.string.on) else getString(R.string.off)
-        tvLanguage.text = if (gameManager.isEnglishLanguage) "EN" else "IT"
+        tvLanguage.text = if (gameManager.isEnglishLanguage) getString(R.string.en) else getString(R.string.it)
         tvTheme.text = if (gameManager.isDarkMode) getString(R.string.dark_mode).uppercase() else getString(R.string.light_mode).uppercase()
+        
+        val isGameRunning = gameManager.loadSavedSequence().isRunning
         ckbRepetitions.isChecked = gameManager.isRepetitionAllowed
+        
+        // disable repetitions if game is running
+        val alpha = if (isGameRunning) 0.5f else 1.0f
+        ckbRepetitions.alpha = alpha
+        findViewById<TextView>(R.id.tvRepetitionsLabel)?.alpha = alpha
     }
 
     // changes between normal state and delete confirmation state

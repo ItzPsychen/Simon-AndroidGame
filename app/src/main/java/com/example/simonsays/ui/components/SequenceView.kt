@@ -117,20 +117,19 @@ class SequenceView @JvmOverloads constructor(
         canvas.drawRoundRect(rect, cornerRadius, cornerRadius, bgPaint)
         canvas.drawRoundRect(rect, cornerRadius, cornerRadius, strokePaint)
 
-        val centerY = height / 2f - (textPaint.descent() + textPaint.ascent()) / 2f
-        val centerX = width / 2f
-
         // show placeholder or sequence
         if (sequence.isEmpty()) {
+            val centerY = height / 2f - (textPaint.descent() + textPaint.ascent()) / 2f
+            val centerX = width / 2f
             val placeholder = context.getString(R.string.placeholder_empty)
             canvas.drawText(placeholder, centerX, centerY, placeholderPaint)
         } else {
-            drawSequence(canvas, centerY)
+            drawSequence(canvas)
         }
     }
 
-    // calculate the max letters visible and draw the sequence
-    private fun drawSequence(canvas: Canvas, centerY: Float) {
+    // calculate the max items visible in up to 3 lines and draw them
+    private fun drawSequence(canvas: Canvas) {
         val padding = 40f
         val comma = ", "
         val ellipsis = "... "
@@ -139,39 +138,74 @@ class SequenceView @JvmOverloads constructor(
         val maxWidth = width.toFloat() - padding * 2
         val commaWidth = textPaintLocal.measureText(comma)
         val ellipsisWidth = textPaintLocal.measureText(ellipsis)
-        var totalWidth = 0f
-        var visibleCount = 0
 
-        for (i in sequence.indices.reversed()) {
-            val itemWidth = textPaintLocal.measureText(sequence[i].first)
-            val needed = itemWidth + (if (i < sequence.size - 1) commaWidth else 0f)
-            if (totalWidth + needed + ellipsisWidth > maxWidth && i > 0) break
-            totalWidth += needed
-            visibleCount++
-        }
+        var finalLines = listOf<List<Int>>()
+        var isTruncated = false
 
-        var currentX = padding
-        if (visibleCount < sequence.size) {
-            textPaintLocal.color = Color.WHITE
-            textPaintLocal.alpha = sequenceAlpha
-            canvas.drawText(ellipsis, currentX, centerY, textPaintLocal)
-            currentX += ellipsisWidth
-        }
+        // 1. look for the earliest start index that fits in 3 lines
+        // 2. ensures the top lines are filled first
+        // 3. only the last line is used
 
-        val startIndex = sequence.size - visibleCount
-        for (i in startIndex until sequence.size) {
-            val item = sequence[i]
-            textPaintLocal.color = item.second
-            textPaintLocal.alpha = sequenceAlpha
-            canvas.drawText(item.first, currentX, centerY, textPaintLocal)
-            currentX += textPaintLocal.measureText(item.first)
+        for (start in sequence.indices.reversed()) {
+            val showEllipsis = start > 0
+            val lines = mutableListOf<List<Int>>()
+            var currentLine = mutableListOf<Int>()
+            var currentLineWidth = if (showEllipsis) ellipsisWidth else 0f
             
-            if (i < sequence.size - 1) {
+            for (i in start until sequence.size) {
+                val itemWidth = textPaintLocal.measureText(sequence[i].first)
+                val spacing = if (i < sequence.size - 1) commaWidth else 0f
+                
+                if (currentLineWidth + itemWidth + spacing > maxWidth && currentLine.isNotEmpty()) {
+                    lines.add(currentLine.toList())
+                    currentLine = mutableListOf()
+                    currentLineWidth = 0f
+                }
+                currentLine.add(i)
+                currentLineWidth += itemWidth + spacing
+            }
+            if (currentLine.isNotEmpty()) lines.add(currentLine)
+            
+            if (lines.size <= 3) {
+                finalLines = lines
+                isTruncated = showEllipsis
+            } else {
+                // if start index doesn't fit in 3 lines
+                break
+            }
+        }
+
+        val fontMetrics = textPaint.fontMetrics
+        val lineHeight = fontMetrics.descent - fontMetrics.ascent
+        val totalHeight = finalLines.size * lineHeight
+        var startY = height / 2f - totalHeight / 2f - fontMetrics.ascent
+
+        for (lineIdx in finalLines.indices) {
+            val lineItems = finalLines[lineIdx]
+            var currentX = padding
+            
+            if (lineIdx == 0 && isTruncated) {
                 textPaintLocal.color = Color.WHITE
                 textPaintLocal.alpha = sequenceAlpha
-                canvas.drawText(comma, currentX, centerY, textPaintLocal)
-                currentX += commaWidth
+                canvas.drawText(ellipsis, currentX, startY, textPaintLocal)
+                currentX += ellipsisWidth
             }
+
+            for (seqIdx in lineItems) {
+                val item = sequence[seqIdx]
+                textPaintLocal.color = item.second
+                textPaintLocal.alpha = sequenceAlpha
+                canvas.drawText(item.first, currentX, startY, textPaintLocal)
+                currentX += textPaintLocal.measureText(item.first)
+                
+                if (seqIdx < sequence.size - 1) {
+                    textPaintLocal.color = Color.WHITE
+                    textPaintLocal.alpha = sequenceAlpha
+                    canvas.drawText(comma, currentX, startY, textPaintLocal)
+                    currentX += commaWidth
+                }
+            }
+            startY += lineHeight
         }
     }
 }

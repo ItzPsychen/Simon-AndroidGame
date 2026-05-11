@@ -1,14 +1,13 @@
 package com.example.simonsays.ui.activities
 
-import com.example.simonsays.R
-import com.example.simonsays.ui.adapters.SequenceAdapter
-
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.simonsays.R
+import com.example.simonsays.ui.adapters.SequenceAdapter
 
 class RecordsActivity : BaseActivity() {
 
@@ -18,6 +17,7 @@ class RecordsActivity : BaseActivity() {
     private lateinit var tvTop3: TextView
     private lateinit var recentGamesLabel: TextView
     private lateinit var topScoresContainer: View
+    private lateinit var emptyStateLayout: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +30,7 @@ class RecordsActivity : BaseActivity() {
         tvTop3 = findViewById(R.id.tvTop3)
         recentGamesLabel = findViewById(R.id.tvHistoryLabel)
         topScoresContainer = findViewById(R.id.topScoresContainer)
+        emptyStateLayout = findViewById(R.id.emptyStateLayout)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
@@ -47,7 +48,12 @@ class RecordsActivity : BaseActivity() {
         if (historyEntries.isEmpty()) {
             topScoresContainer.visibility = View.GONE
             recentGamesLabel.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            emptyStateLayout.visibility = View.VISIBLE
         } else {
+            emptyStateLayout.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+            recentGamesLabel.visibility = View.VISIBLE
 
             // update top 3 scores based on the score field
             val topScores = historyEntries

@@ -28,8 +28,11 @@
     <string name="no">No</string>
     <string name="cancel">ANNULLA</string>
     <string name="confirm">CONFERMA ELIMINAZIONE</string>
+    <string name="repetition_locked">Impossibile cambiare ripetizioni durante una partita</string>
 
     <!-- RECORDS -->
     <string name="top_scores">I MIGLIORI 3</string>
     <string name="recent_games">PARTITE RECENTI</string>
+    <string name="go_play">Vai a giocare una partita</string>
+    <string name="score">PUNTI: </string>
 </resources>

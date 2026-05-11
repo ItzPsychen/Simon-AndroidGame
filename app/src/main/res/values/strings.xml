@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Simon</string>
     <string name="start">START GAME</string>
     <string name="pause">PAUSE</string>
@@ -20,14 +20,17 @@
     <string name="light_mode">Light</string>
     <string name="dark_mode">Dark</string>
     <string name="on">ON</string>
+    <string name="en" translatable="false">EN</string>
+    <string name="it" translatable="false">IT</string>
     <string name="off">OFF</string>
     <string name="reset_default">RESET TO DEFAULT</string>
     <string name="delete_records">DELETE ALL</string>
     <string name="confirm_delete">Are you sure you want to delete all records?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="confirm">CONFIRM DELETION</string>
+    <string name="repetition_locked">Cannot change repetitions during a game</string>
 
     <!-- RECORDS -->
     <string name="top_scores">TOP 3 SCORES</string>
@@ -35,4 +38,7 @@
     <string name="_1st" translatable="false">1st</string>
     <string name="_2nd" translatable="false">2nd</string>
     <string name="_3rd" translatable="false">3rd</string>
+    <string name="go_play">Go play a game</string>
+    <string name="score">SCORE: </string>
+    <string name="rep" translatable="false">REP: </string>
 </resources>

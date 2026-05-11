@@ -29,7 +29,7 @@ class MainActivity : BaseActivity() {
     private var isPlayingSequence = false
     private var isGameRunning = false
     private var isPaused = false
-    
+
     private val handler = Handler(Looper.getMainLooper())
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +51,7 @@ class MainActivity : BaseActivity() {
         val saved = gameManager.loadSavedSequence()
         this.isGameRunning = saved.isRunning
         this.playerIndex = saved.playerIndex
+        this.isPaused = saved.isPaused // Restore paused state
         
         gameSequence.clear()
         saved.targetSequenceLabels.forEach { label ->
@@ -66,9 +67,26 @@ class MainActivity : BaseActivity() {
             findViewById<View>(R.id.containerStart).visibility = View.GONE
             findViewById<View>(R.id.containerPause).visibility = View.VISIBLE
             findViewById<View>(R.id.containerEndGame).visibility = View.VISIBLE
-        } else {
-            sequenceView.clear()
+            
+            // update control buttons state
+            updateControlButtonsUI()
         }
+    }
+
+    private fun updateControlButtonsUI() {
+        val btnPause = findViewById<ButtonView>(R.id.btnPauseView)
+        val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
+        val typedValue = TypedValue()
+        theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue, true)
+        val controlColor = typedValue.data
+        
+        // update pause button
+        btnPause.setConfig(controlColor, if (isPaused) getString(R.string.resume) else getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false)
+        
+        // update end game button (enabled if game paused)
+        btnEndGame.isEnabled = isPaused
+        val endAlpha = if (isPaused) 0.2f else 0.1f
+        btnEndGame.setConfig(controlColor, getString(R.string.end), alpha = endAlpha, textSize = 50f, isBold = false)
     }
 
     // called when resuming the activity
@@ -76,6 +94,16 @@ class MainActivity : BaseActivity() {
         super.onResume()
         if (!isGameRunning) {
             sequenceView.clear()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // auto-pause when leaving the activity
+        if (isGameRunning && !isPaused) {
+            isPaused = true
+            updateControlButtonsUI()
+            saveCurrentStateAsDraft()
         }
     }
 
@@ -125,8 +153,9 @@ class MainActivity : BaseActivity() {
         val controlColor = typedValue.data
 
         btnStart.setConfig(controlColor, getString(R.string.start), alpha = 0.2f, textSize = 50f, isBold = false)
-        btnPause.setConfig(controlColor, getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false)
-        btnEndGame.setConfig(controlColor, getString(R.string.end), alpha = 0.2f, textSize = 50f, isBold = false)
+        
+        // Initial setup for pause/end handled by updateControlButtonsUI()
+        updateControlButtonsUI()
 
         btnStart.setSoundEnabled(false)
         btnPause.setSoundEnabled(false)
@@ -138,13 +167,14 @@ class MainActivity : BaseActivity() {
             containerStart.visibility = View.GONE
             containerPause.visibility = View.VISIBLE
             containerEndGame.visibility = View.VISIBLE
+            updateControlButtonsUI()
         }
 
         // PAUSE
         btnPause.setOnClickListener {
             if (!isGameRunning) return@setOnClickListener
             isPaused = !isPaused
-            btnPause.setConfig(controlColor, if (isPaused) getString(R.string.resume) else getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false)
+            updateControlButtonsUI()
             if (!isPaused && isPlayingSequence) {
                 showSequence()
             }
@@ -277,9 +307,9 @@ class MainActivity : BaseActivity() {
             }
         }
         
-        if (historySequence.isNotEmpty() || score > 0) {
-            // TODO: change to SqliteDatabase
-            gameManager.addSequence(score, historySequence)
+        // add to history if score > 0
+        if (score > 0) {
+            gameManager.addSequence(score, historySequence, System.currentTimeMillis(), gameManager.isRepetitionAllowed)
         }
         
         sequenceView.clear()
@@ -289,12 +319,8 @@ class MainActivity : BaseActivity() {
         findViewById<View>(R.id.containerPause).visibility = View.GONE
         findViewById<View>(R.id.containerEndGame).visibility = View.GONE
         
-        val typedValue = TypedValue()
-        theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue, true)
-        findViewById<ButtonView>(R.id.btnPauseView).setConfig(
-            typedValue.data, getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false
-        )
         isPaused = false
+        updateControlButtonsUI()
 
         // only if score is at least 1
         if (score > 0) {
@@ -312,7 +338,8 @@ class MainActivity : BaseActivity() {
         val sequenceData = sequenceView.getSequenceData().map { (label, color) ->
             GameManager.SequenceElement(label, color, color == Color.RED)
         }
-        gameManager.saveDraft(score, playerIndex, isGameRunning, targetLabels, sequenceData)
+        // save paused state
+        gameManager.saveDraft(score, playerIndex, isGameRunning, targetLabels, sequenceData, isPaused)
     }
 
     // save draft on configuration change

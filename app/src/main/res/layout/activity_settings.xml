@@ -16,264 +16,277 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/settingsContainer"
+    <ScrollView
+        android:id="@+id/settingsScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="40dp"
-        android:paddingBottom="24dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menuLayout"
-        app:layout_constraintWidth_max="500dp"
-        app:layout_constraintWidth_percent="0.9">
+        app:layout_constraintTop_toBottomOf="@id/menuLayout">
 
-        <!-- SOUND EFFECTS -->
+        <!-- SETTINGS CONTAINER -->
         <LinearLayout
+            android:id="@+id/settingsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="24dp"
+            app:layout_constraintWidth_max="500dp"
+            app:layout_constraintWidth_percent="0.9">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/sound_effects"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
+            <!-- SOUND EFFECTS -->
             <LinearLayout
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvVolumeValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/sound_effects"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:text="50" />
+                    android:textSize="20sp" />
 
-                <SeekBar
-                    android:id="@+id/sbSoundIntensity"
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:max="100"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    android:progressBackgroundTint="#40FFFFFF"
-                    android:progressTint="@color/green"
-                    android:splitTrack="false"
-                    android:thumb="@null"
-                    android:thumbOffset="0dp" />
+                <LinearLayout
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvVolumeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="50" />
+
+                    <SeekBar
+                        android:id="@+id/sbSoundIntensity"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:max="100"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:progressBackgroundTint="#40FFFFFF"
+                        android:progressTint="@color/green"
+                        android:splitTrack="false"
+                        android:thumb="@null"
+                        android:thumbOffset="0dp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- GAME SPEED -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/game_speed"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
+            <!-- GAME SPEED -->
             <LinearLayout
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvSpeedValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/game_speed"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvSpeedValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="x1.0" />
+
+                    <SeekBar
+                        android:id="@+id/sbGameSpeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:max="4"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:progressBackgroundTint="#40FFFFFF"
+                        android:progressTint="@color/green"
+                        android:splitTrack="false"
+                        android:thumb="@null"
+                        android:thumbOffset="0dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- COLORBLIND -->
+            <LinearLayout
+                android:id="@+id/btnToggleColorblind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/colorblind_label"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvColorblindValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="ON" />
+            </LinearLayout>
+
+            <!-- ALLOW REPETITIONS -->
+            <LinearLayout
+                android:id="@+id/ckbToggleRepetitions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvRepetitionsLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/repetitions_label"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/ckbRepetitions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="-16dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:checked="true"/>
+            </LinearLayout>
+
+            <!-- LANGUAGE -->
+            <LinearLayout
+                android:id="@+id/btnToggleLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/language_label"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvLanguageValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="EN" />
+            </LinearLayout>
+
+            <!-- THEME -->
+            <LinearLayout
+                android:id="@+id/btnToggleTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:layout_marginBottom="32dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/theme_label"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvThemeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="DARK" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- RESET TO DEFAULT -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResetDefault"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/reset_default"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:text="x1.0" />
+                    app:backgroundTint="#44FFFFFF"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#FFFFFF"
+                    app:strokeWidth="@dimen/stroke_width" />
 
-                <SeekBar
-                    android:id="@+id/sbGameSpeed"
+                <!-- DELETE ALL RECORDS -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteAllRecords"
                     android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:max="4"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    android:progressBackgroundTint="#40FFFFFF"
-                    android:progressTint="@color/green"
-                    android:splitTrack="false"
-                    android:thumb="@null"
-                    android:thumbOffset="0dp" />
+                    android:layout_height="64dp"
+                    android:text="@string/delete_records"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:backgroundTint="#FF5252"
+                    app:cornerRadius="12dp" />
             </LinearLayout>
         </LinearLayout>
-
-        <!-- COLORBLIND -->
-        <LinearLayout
-            android:id="@+id/btnToggleColorblind"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/colorblind_label"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvColorblindValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="ON" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ckbToggleRepetitions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/repetitions_label"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <CheckBox
-                android:id="@+id/ckbRepetitions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="-16dp"
-                android:checked="true"/>
-        </LinearLayout>
-
-        <!-- LANGUAGE -->
-        <LinearLayout
-            android:id="@+id/btnToggleLanguage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/language_label"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvLanguageValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="EN" />
-        </LinearLayout>
-
-        <!-- THEME -->
-        <LinearLayout
-            android:id="@+id/btnToggleTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="32dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/theme_label"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvThemeValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="DARK" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- RESET TO DEFAULT -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnResetDefault"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginBottom="12dp"
-                android:text="@string/reset_default"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                app:backgroundTint="#44FFFFFF"
-                app:cornerRadius="12dp"
-                app:strokeColor="#FFFFFF"
-                app:strokeWidth="@dimen/stroke_width" />
-
-            <!-- DELETE ALL RECORDS -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDeleteAllRecords"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:text="@string/delete_records"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                app:backgroundTint="#FF5252"
-                app:cornerRadius="12dp" />
-        </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

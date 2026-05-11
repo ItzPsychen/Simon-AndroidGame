@@ -15,16 +15,22 @@ class GameManager(context: Context) {
         val sequence: List<SequenceElement>,
         val isRunning: Boolean = false,
         val playerIndex: Int = 0,
-        val targetSequenceLabels: List<String> = emptyList()
+        val targetSequenceLabels: List<String> = emptyList(),
+        val isPaused: Boolean = false,
+        val timestamp: Long = 0L,
+        val repetitionsAllowed: Boolean = true
     )
 
     private val sharedPref: SharedPreferences = context.getSharedPreferences("SimonSaysPrefs", Context.MODE_PRIVATE)
 
     // set and add the new sequence for the history
-    fun addSequence(score: Int, sequence: List<SequenceElement>) {
+    fun addSequence(score: Int, sequence: List<SequenceElement>, timestamp: Long, repetitionsAllowed: Boolean) {
         if (sequence.isEmpty() && score == 0) return
         val serializedSeq = sequence.joinToString(",") { "${it.label}:${it.color}:${if (it.isError) 1 else 0}" }
-        val entry = "$score;$serializedSeq;0;0;"
+        val repInt = if (repetitionsAllowed) 1 else 0
+
+        // format: score;serializedSeq;isRunning;playerIndex;targetLabels;isPaused;timestamp;repetitionsAllowed
+        val entry = "$score;$serializedSeq;0;0;;0;$timestamp;$repInt"
         
         val historyStr = sharedPref.getString("history_list", "") ?: ""
         val newHistory = if (historyStr.isEmpty()) {
@@ -40,11 +46,14 @@ class GameManager(context: Context) {
     }
 
     // save sequence draft in sharedPref
-    fun saveDraft(score: Int, playerIndex: Int, isRunning: Boolean, targetLabels: List<String>, sequence: List<SequenceElement>) {
+    fun saveDraft(score: Int, playerIndex: Int, isRunning: Boolean, targetLabels: List<String>, sequence: List<SequenceElement>, isPaused: Boolean = false) {
         val serializedSeq = sequence.joinToString(",") { "${it.label}:${it.color}:${if (it.isError) 1 else 0}" }
         val targetStr = targetLabels.joinToString(",")
         val runningInt = if (isRunning) 1 else 0
-        val draft = "$score;$serializedSeq;$runningInt;$playerIndex;$targetStr"
+        val pausedInt = if (isPaused) 1 else 0
+        val repInt = if (isRepetitionAllowed) 1 else 0
+        // draft format: score;serializedSeq;isRunning;playerIndex;targetLabels;isPaused;timestamp;repetitionsAllowed
+        val draft = "$score;$serializedSeq;$runningInt;$playerIndex;$targetStr;$pausedInt;0;$repInt"
         sharedPref.edit { putString("saved_sequence", draft) }
     }
 
@@ -79,8 +88,11 @@ class GameManager(context: Context) {
         val isRunning = if (parts.size > 2) parts[2] == "1" else false
         val playerIndex = if (parts.size > 3) parts[3].toIntOrNull() ?: 0 else 0
         val targetLabels = if (parts.size > 4 && parts[4].isNotEmpty()) parts[4].split(",") else emptyList()
+        val isPaused = if (parts.size > 5) parts[5] == "1" else false
+        val timestamp = if (parts.size > 6) parts[6].toLongOrNull() ?: 0L else 0L
+        val repetitionsAllowed = if (parts.size > 7) parts[7] == "1" else true
 
-        return HistoryEntry(score, sequence, isRunning, playerIndex, targetLabels)
+        return HistoryEntry(score, sequence, isRunning, playerIndex, targetLabels, isPaused, timestamp, repetitionsAllowed)
     }
 
     // returns the whole sequence history
@@ -102,12 +114,19 @@ class GameManager(context: Context) {
 
     // from settings, resets to default
     fun resetToDefault() {
+        val wasRunning = loadSavedSequence().isRunning
+        val currentRepAllowed = isRepetitionAllowed
         sharedPref.edit(commit = true) {
             putBoolean("is_english", true)
             putBoolean("colorblind_mode", true)
             putBoolean("is_dark_mode", false)
             putBoolean("sound_enabled", true)
-            putBoolean("is_repetition_allowed", true)
+            // Disable changing repetitions via reset if a game is running
+            if (!wasRunning) {
+                putBoolean("is_repetition_allowed", true)
+            } else {
+                putBoolean("is_repetition_allowed", currentRepAllowed)
+            }
             putInt("sound_volume", 50)
             putFloat("game_speed", 1.0f)
         }
@@ -128,7 +147,7 @@ class GameManager(context: Context) {
         get() = sharedPref.getBoolean("is_dark_mode", false)
         set(value) = sharedPref.edit { putBoolean("is_dark_mode", value) }
 
-    // getter/setter for dark mode
+    // getter/setter for repetitions
     var isRepetitionAllowed: Boolean
         get() = sharedPref.getBoolean("is_repetition_allowed", true)
         set(value) = sharedPref.edit { putBoolean("is_repetition_allowed", value) }
