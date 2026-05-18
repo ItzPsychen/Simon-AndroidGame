@@ -8,6 +8,7 @@ import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 
 import com.example.simonsays.R
 import com.example.simonsays.logic.GameManager
@@ -15,6 +16,7 @@ import com.example.simonsays.logic.TonePlayer.ToneConstants
 import com.example.simonsays.model.SimonColor
 import com.example.simonsays.ui.components.ButtonView
 import com.example.simonsays.ui.components.SequenceView
+import kotlinx.coroutines.launch
 
 import kotlin.random.Random
 
@@ -36,7 +38,9 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null && !intent.hasExtra("is_restarting")) {
-            gameManager.clearSequence()
+            lifecycleScope.launch {
+                gameManager.clearSequence()
+            }
         }
         
         setContentView(R.layout.activity_main)
@@ -48,31 +52,33 @@ class MainActivity : BaseActivity() {
         setupMenuButtons()
         
         // restore from draft
-        val saved = gameManager.loadSavedSequence()
-        this.isGameRunning = saved.isRunning
-        this.playerIndex = saved.playerIndex
-        this.isPaused = saved.isPaused // Restore paused state
-        
-        gameSequence.clear()
-        saved.targetSequenceLabels.forEach { label ->
-            SimonColor.entries.find { it.label == label }?.let { gameSequence.add(it) }
-        }
-
-        saved.sequence.forEach { 
-            val color = if (it.isError) Color.RED else it.color
-            sequenceView.addElement(it.label, color)
-        }
-
-        if (isGameRunning) {
-            findViewById<View>(R.id.containerStart).visibility = View.GONE
-            findViewById<View>(R.id.containerPause).visibility = View.VISIBLE
-            findViewById<View>(R.id.containerEndGame).visibility = View.VISIBLE
+        lifecycleScope.launch {
+            val saved = gameManager.loadSavedSequence()
+            isGameRunning = saved.isRunning
+            playerIndex = saved.playerIndex
+            isPaused = saved.isPaused
             
-            // update control buttons state
-            updateControlButtonsUI()
+            gameSequence.clear()
+            saved.targetSequenceLabels.forEach { label ->
+                SimonColor.entries.find { it.label == label }?.let { gameSequence.add(it) }
+            }
+
+            saved.sequence.forEach { 
+                val color = if (it.isError) Color.RED else it.color
+                sequenceView.addElement(it.label, color)
+            }
+
+            if (isGameRunning) {
+                findViewById<View>(R.id.containerStart).visibility = View.GONE
+                findViewById<View>(R.id.containerPause).visibility = View.VISIBLE
+                findViewById<View>(R.id.containerEndGame).visibility = View.VISIBLE
+                
+                updateControlButtonsUI()
+            }
         }
     }
 
+    // update color of the control buttons
     private fun updateControlButtonsUI() {
         val btnPause = findViewById<ButtonView>(R.id.btnPauseView)
         val btnEndGame = findViewById<ButtonView>(R.id.btnEndGameView)
@@ -80,16 +86,13 @@ class MainActivity : BaseActivity() {
         theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue, true)
         val controlColor = typedValue.data
         
-        // update pause button
         btnPause.setConfig(controlColor, if (isPaused) getString(R.string.resume) else getString(R.string.pause), alpha = 0.2f, textSize = 50f, isBold = false)
         
-        // update end game button (enabled if game paused)
         btnEndGame.isEnabled = isPaused
         val endAlpha = if (isPaused) 0.2f else 0.1f
         btnEndGame.setConfig(controlColor, getString(R.string.end), alpha = endAlpha, textSize = 50f, isBold = false)
     }
 
-    // called when resuming the activity
     override fun onResume() {
         super.onResume()
         if (!isGameRunning) {
@@ -99,7 +102,6 @@ class MainActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        // auto-pause when leaving the activity
         if (isGameRunning && !isPaused) {
             isPaused = true
             updateControlButtonsUI()
@@ -107,7 +109,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // setup for colored buttons and listeners
+    // sets up the buttons
     private fun setupButtons() {
         val colors = SimonColor.entries.toTypedArray()
         gameButtons = listOf(
@@ -138,7 +140,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // setup for control buttons and listeners
+    // sets up the control buttons
     private fun setupControlButtons() {
         val btnStart = findViewById<ButtonView>(R.id.btnStartView)
         val btnPause = findViewById<ButtonView>(R.id.btnPauseView)
@@ -154,14 +156,12 @@ class MainActivity : BaseActivity() {
 
         btnStart.setConfig(controlColor, getString(R.string.start), alpha = 0.2f, textSize = 50f, isBold = false)
         
-        // Initial setup for pause/end handled by updateControlButtonsUI()
         updateControlButtonsUI()
 
         btnStart.setSoundEnabled(false)
         btnPause.setSoundEnabled(false)
         btnEndGame.setSoundEnabled(false)
 
-        // START GAME
         btnStart.setOnClickListener {
             startGame()
             containerStart.visibility = View.GONE
@@ -170,7 +170,6 @@ class MainActivity : BaseActivity() {
             updateControlButtonsUI()
         }
 
-        // PAUSE
         btnPause.setOnClickListener {
             if (!isGameRunning) return@setOnClickListener
             isPaused = !isPaused
@@ -180,13 +179,12 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        // END GAME
         btnEndGame.setOnClickListener {
             gameOver(hasMistake = false)
         }
     }
 
-    // start of the game
+    // game starter
     private fun startGame() {
         isGameRunning = true
         isPaused = false
@@ -195,7 +193,7 @@ class MainActivity : BaseActivity() {
         nextRound()
     }
 
-    // makes the next round of the game
+    // creates the next round
     private fun nextRound() {
         playerIndex = 0
         sequenceIndexToShow = 0
@@ -213,21 +211,18 @@ class MainActivity : BaseActivity() {
         showSequence()
     }
 
-    // enables/disables all buttons
+    // enables/disables the buttons
     private fun setButtonsEnabled(enabled: Boolean) {
         gameButtons.forEach { it.isEnabled = enabled }
     }
 
-    // shows the sequence to be replicated
+    // shows the sequence in game
     private fun showSequence() {
         if (!isGameRunning || isPaused) return
         isPlayingSequence = true
         setButtonsEnabled(false)
         
-        // default delay is 600ms
         val delay = (600 / gameManager.gameSpeed).toLong()
-
-        // wait at least 1000ms
         val currentDelay = if (sequenceIndexToShow == 0) 1000L.coerceAtLeast(delay) else delay
 
         handler.removeCallbacksAndMessages(null)
@@ -241,8 +236,6 @@ class MainActivity : BaseActivity() {
             val buttonIndex = SimonColor.entries.indexOf(color)
             if (buttonIndex in gameButtons.indices) {
                 val button = gameButtons[buttonIndex]
-
-                // glow duration based on speed
                 val glowDuration = 800L.coerceAtMost((delay / 2))
                 button.glow(glowDuration)
                 button.playSound()
@@ -259,17 +252,14 @@ class MainActivity : BaseActivity() {
         }, currentDelay)
     }
 
-    // handler for player input
+    // gets the player input
     private fun handlePlayerInput(color: SimonColor) {
         if (color == gameSequence[playerIndex]) {
             sequenceView.addElement(color.label, color.colorRes)
             playerIndex++
             if (playerIndex == gameSequence.size) {
                 isPlayingSequence = true
-                
-                // glow all buttons
                 gameButtons.forEach { it.glow(300) }
-                
                 handler.postDelayed({
                     if (!isGameRunning) return@postDelayed
                     sequenceView.clear(true)
@@ -281,7 +271,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // game over called on the first mistake or with END GAME
+    // game end (mistake or manual)
     private fun gameOver(hasMistake: Boolean) {
         if (!isGameRunning) return
         isGameRunning = false
@@ -290,9 +280,7 @@ class MainActivity : BaseActivity() {
         
         val score = gameSequence.size - 1
         val historySequence = mutableListOf<GameManager.SequenceElement>()
-        sequenceView.clear()
-
-        // case of mistake or just ending the game
+        
         if (!hasMistake) {
             for (i in 0 until score) {
                 val c = gameSequence[i]
@@ -307,60 +295,60 @@ class MainActivity : BaseActivity() {
             }
         }
         
-        // add to history if score > 0
-        if (score > 0) {
-            gameManager.addSequence(score, historySequence, System.currentTimeMillis(), gameManager.isRepetitionAllowed)
-        }
-        
-        sequenceView.clear()
-        gameManager.clearSequence() 
-        
-        findViewById<View>(R.id.containerStart).visibility = View.VISIBLE
-        findViewById<View>(R.id.containerPause).visibility = View.GONE
-        findViewById<View>(R.id.containerEndGame).visibility = View.GONE
-        
-        isPaused = false
-        updateControlButtonsUI()
+        lifecycleScope.launch {
+            if (score > 0) {
+                gameManager.addSequence(score, historySequence, System.currentTimeMillis(), gameManager.isRepetitionAllowed)
+            }
+            gameManager.clearSequence() 
+            
+            sequenceView.clear()
+            findViewById<View>(R.id.containerStart).visibility = View.VISIBLE
+            findViewById<View>(R.id.containerPause).visibility = View.GONE
+            findViewById<View>(R.id.containerEndGame).visibility = View.GONE
+            
+            isPaused = false
+            updateControlButtonsUI()
 
-        // only if score is at least 1
-        if (score > 0) {
-            Toast.makeText(this, "Game Over! Score: $score", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, RecordsActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            startActivity(intent)
+            if (score > 0) {
+                Toast.makeText(this@MainActivity, "Game Over! Score: $score", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, RecordsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
+            }
         }
     }
 
-    // save the game as draft
+    // saves the state as draft
     private fun saveCurrentStateAsDraft() {
         val score = if (isGameRunning) gameSequence.size - 1 else 0
         val targetLabels = gameSequence.map { it.label }
         val sequenceData = sequenceView.getSequenceData().map { (label, color) ->
             GameManager.SequenceElement(label, color, color == Color.RED)
         }
-        // save paused state
-        gameManager.saveDraft(score, playerIndex, isGameRunning, targetLabels, sequenceData, isPaused)
+        lifecycleScope.launch {
+            gameManager.saveDraft(score, playerIndex, isGameRunning, targetLabels, sequenceData, isPaused)
+        }
     }
 
-    // save draft on configuration change
+    // save state on configuration change
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         saveCurrentStateAsDraft()
     }
 
-    // save draft on language change
+    // save state on language change
     override fun onLanguageChanged() {
         saveCurrentStateAsDraft()
         super.onLanguageChanged()
     }
 
-    // save draft on colorblind mode change
+    // save state on colorblind mode change
     override fun onColorblindModeChanged(enabled: Boolean) {
         saveCurrentStateAsDraft()
         super.onColorblindModeChanged(enabled)
     }
 
-    // save draft on configuration change
+    // save state on theme change
     override fun onBeforeConfigChanged() {
         saveCurrentStateAsDraft()
     }

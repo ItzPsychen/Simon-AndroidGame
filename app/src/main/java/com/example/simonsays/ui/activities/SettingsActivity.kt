@@ -9,8 +9,10 @@ import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 
 import com.example.simonsays.R
+import kotlinx.coroutines.launch
 
 class SettingsActivity : BaseActivity() {
 
@@ -118,12 +120,14 @@ class SettingsActivity : BaseActivity() {
 
         // REPETITIONS listener
         btnToggleRepetitions.setOnClickListener {
-            if (gameManager.loadSavedSequence().isRunning) {
-                Toast.makeText(this, getString(R.string.repetition_locked), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            lifecycleScope.launch {
+                if (gameManager.loadSavedSequence().isRunning) {
+                    Toast.makeText(this@SettingsActivity, getString(R.string.repetition_locked), Toast.LENGTH_SHORT).show()
+                } else {
+                    gameManager.isRepetitionAllowed = !gameManager.isRepetitionAllowed
+                    updateUI()
+                }
             }
-            gameManager.isRepetitionAllowed = !gameManager.isRepetitionAllowed
-            updateUI()
         }
 
         // RESET DEFAULT / CANCEL
@@ -141,8 +145,10 @@ class SettingsActivity : BaseActivity() {
         // DELETE ALL / CONFIRM
         btnDelete.setOnClickListener {
             if (isConfirmingDelete) {
-                gameManager.clearHistory()
-                toggleDeleteConfirmation(false)
+                lifecycleScope.launch {
+                    gameManager.clearHistory()
+                    toggleDeleteConfirmation(false)
+                }
             } else {
                 toggleDeleteConfirmation(true)
             }
@@ -175,13 +181,15 @@ class SettingsActivity : BaseActivity() {
         tvLanguage.text = if (gameManager.isEnglishLanguage) getString(R.string.en) else getString(R.string.it)
         tvTheme.text = if (gameManager.isDarkMode) getString(R.string.dark_mode).uppercase() else getString(R.string.light_mode).uppercase()
         
-        val isGameRunning = gameManager.loadSavedSequence().isRunning
-        ckbRepetitions.isChecked = gameManager.isRepetitionAllowed
-        
-        // disable repetitions if game is running
-        val alpha = if (isGameRunning) 0.5f else 1.0f
-        ckbRepetitions.alpha = alpha
-        findViewById<TextView>(R.id.tvRepetitionsLabel)?.alpha = alpha
+        lifecycleScope.launch {
+            val isGameRunning = gameManager.loadSavedSequence().isRunning
+            ckbRepetitions.isChecked = gameManager.isRepetitionAllowed
+            
+            // disable repetitions if game is running
+            val alpha = if (isGameRunning) 0.5f else 1.0f
+            ckbRepetitions.alpha = alpha
+            findViewById<TextView>(R.id.tvRepetitionsLabel)?.alpha = alpha
+        }
     }
 
     // changes between normal state and delete confirmation state

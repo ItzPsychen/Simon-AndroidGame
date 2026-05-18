@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 import com.example.simonsays.R
 import com.example.simonsays.ui.adapters.SequenceAdapter
+
+import kotlinx.coroutines.launch
 
 class RecordsActivity : BaseActivity() {
 
@@ -35,44 +39,42 @@ class RecordsActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    // called when resuming the activity
     override fun onResume() {
         super.onResume()
         refreshHistory()
     }
 
-    // reloads the history
+    // refresh the history
     private fun refreshHistory() {
-        val historyEntries = gameManager.getAllSequences()
+        lifecycleScope.launch {
+            val historyEntries = gameManager.getAllSequences()
 
-        if (historyEntries.isEmpty()) {
-            topScoresContainer.visibility = View.GONE
-            recentGamesLabel.visibility = View.GONE
-            recyclerView.visibility = View.GONE
-            emptyStateLayout.visibility = View.VISIBLE
-        } else {
-            emptyStateLayout.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            recentGamesLabel.visibility = View.VISIBLE
-
-            // update top 3 scores based on the score field
-            val topScores = historyEntries
-                .map { it.score }
-                .sortedDescending()
-                .take(3)
-
-            // in case its empty (no scores)
-            if (topScores.isEmpty()) {
+            if (historyEntries.isEmpty()) {
                 topScoresContainer.visibility = View.GONE
+                recentGamesLabel.visibility = View.GONE
+                recyclerView.visibility = View.GONE
+                emptyStateLayout.visibility = View.VISIBLE
             } else {
-                topScoresContainer.visibility = View.VISIBLE
-                tvTop1.text = topScores.getOrNull(0)?.toString() ?: "-"
-                tvTop2.text = topScores.getOrNull(1)?.toString() ?: "-"
-                tvTop3.text = topScores.getOrNull(2)?.toString() ?: "-"
-            }
-        }
+                emptyStateLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                recentGamesLabel.visibility = View.VISIBLE
 
-        // update entire list
-        recyclerView.adapter = SequenceAdapter(historyEntries)
+                val topScores = historyEntries
+                    .map { it.score }
+                    .sortedDescending()
+                    .take(3)
+
+                if (topScores.isEmpty()) {
+                    topScoresContainer.visibility = View.GONE
+                } else {
+                    topScoresContainer.visibility = View.VISIBLE
+                    tvTop1.text = topScores.getOrNull(0)?.toString() ?: "-"
+                    tvTop2.text = topScores.getOrNull(1)?.toString() ?: "-"
+                    tvTop3.text = topScores.getOrNull(2)?.toString() ?: "-"
+                }
+            }
+
+            recyclerView.adapter = SequenceAdapter(historyEntries)
+        }
     }
 }
